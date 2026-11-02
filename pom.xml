@@ -56,12 +56,6 @@
 			<optional>true</optional>
 		</dependency>
 
-		<!-- Base de données H2 (runtime) -->
-		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<scope>runtime</scope>
-		</dependency>
 
 		<!-- API REST / MVC -->
 		<dependency>
@@ -69,10 +63,10 @@
 			<artifactId>spring-boot-starter-webmvc</artifactId>
 		</dependency>
 
-		<!-- Console H2 -->
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-h2console</artifactId>
+			<groupId>com.mysql</groupId>
+			<artifactId>mysql-connector-j</artifactId>
+			<scope>runtime</scope>
 		</dependency>
 	</dependencies>
 
