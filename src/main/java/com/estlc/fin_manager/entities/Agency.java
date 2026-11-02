@@ -20,6 +20,7 @@ public class Agency {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "num_ag")
     private Long numAg;
 
     // "Long" et "Latt" du tableau : longitude et latitude

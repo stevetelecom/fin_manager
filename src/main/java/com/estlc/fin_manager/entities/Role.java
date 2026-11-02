@@ -5,8 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Rôle d'un utilisateur (ADMIN, CLIENT, AGENT...), qui regroupe des permissions.
@@ -20,7 +20,8 @@ public class Role {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idRole;
+    @Column(name = "role_id")
+    private Long idRole; // colonne role_id pour correspondre aux referencedColumnName des tables de jointure
 
     @Column(nullable = false, unique = true)
     private String nomRole;
@@ -29,14 +30,14 @@ public class Role {
 
     // * Roles <-> * Users (côté inverse, géré par User.roles)
     @ManyToMany(mappedBy = "roles")
-    private Set<User> users = new HashSet<>();
+    private List<User> users = new ArrayList<>(); // un rôle doit pouvoir voir la liste de ses utilisateurs
 
     // * Roles <-> * Permissions
     @ManyToMany
     @JoinTable(
             name = "role_permissions",
-            joinColumns = @JoinColumn(name = "role_id"),
-            inverseJoinColumns = @JoinColumn(name = "permission_id")
+            joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "role_id"),
+            inverseJoinColumns = @JoinColumn(name = "permission_id", referencedColumnName = "id_per")
     )
-    private Set<Permission> permissions = new HashSet<>();
+    private List<Permission> permissions = new ArrayList<>(); // un rôle doit pouvoir voir la liste de ses permissions
 }

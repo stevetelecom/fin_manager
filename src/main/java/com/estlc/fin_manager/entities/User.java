@@ -1,5 +1,6 @@
 package com.estlc.fin_manager.entities;
 
+import com.estlc.fin_manager.utils.SexEnum;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,9 +8,7 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Utilisateur de l'application (client, agent, administrateur...).
@@ -19,17 +18,17 @@ import java.util.Set;
 @Table(name = "users")
 @Getter
 @Setter
-@NoArgsConstructor
+@NoArgsConstructor // constructeur sans arguments (Lombok) ; ajouter @RequiredArgsConstructor si besoin
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idUser;
+    @Column(name = "cni", nullable = false, unique = true)
+    private String idUser; // CNI de l'utilisateur : clé primaire (String)
 
-    @Column(nullable = false)
+    @Column(nullable = false) // @Basic(optionel = false)
     private String nomUser;
 
-    private String prenomUser;
+    private String prenomUser; // user a un champ Date
 
     @Column(nullable = false, unique = true)
     private String email;
@@ -38,20 +37,23 @@ public class User {
 
     private LocalDate dateNaissance;
 
-    private String sexe;
+    private LocalDate dateInscription; // date d'inscription de l'utilisateur
+
+    @Enumerated(EnumType.STRING)
+    private SexEnum sexe; // enum partagé depuis le dossier utils
 
     private String profession;
 
     // 1 User possède * Comptes
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Account> accounts = new ArrayList<>();
+    private List<Account> accounts = new ArrayList<>(); // un user doit avoir la liste de ses comptes
 
     // * User <-> * Role
     @ManyToMany
     @JoinTable(
             name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "cni"), // la PK de User est la colonne cni
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "role_id")
     )
-    private Set<Role> roles = new HashSet<>();
+    private List<Role> roles = new ArrayList<>(); // un user doit pouvoir voir la liste de ses rôles
 }

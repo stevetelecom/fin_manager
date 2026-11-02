@@ -1,5 +1,7 @@
 package com.estlc.fin_manager.entities;
 
+import com.estlc.fin_manager.utils.StatutTransactionEnum;
+import com.estlc.fin_manager.utils.TypeTransactionEnum;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,23 +22,28 @@ public class Transaction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "num_transac")
     private Long numTransac;
 
-    private String typeTransac;
+    @Enumerated(EnumType.STRING)
+    private TypeTransactionEnum typeTransac; // DEPOT, RETRAIT, VIREMENT
 
     private LocalDateTime dateTransac;
 
     @Column(nullable = false, precision = 19, scale = 2)
     private BigDecimal montantTransac;
 
-    private String statutTransac;
+    @Enumerated(EnumType.STRING)
+    private StatutTransactionEnum statutTransac; // PENDING, VALIDEE, ANNULEE, ECHOUEE
 
     // * Transactions concernent 1 Compte
     @ManyToOne(optional = false)
-    @JoinColumn(name = "account_id")
+    @JoinColumn(name = "account_id", referencedColumnName = "num_compte") // PK de Account = num_compte
     private Account account;
 
     // 1 Transaction génère 0..1 Notification
     @OneToOne(mappedBy = "transaction", cascade = CascadeType.ALL)
     private Notification notification;
 }
+
+// type et status enumerer , chacun doit avoir un client htttp , posmant ou thumdirburd

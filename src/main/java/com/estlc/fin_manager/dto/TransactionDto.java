@@ -1,5 +1,8 @@
 package com.estlc.fin_manager.dto;
 
+import com.estlc.fin_manager.utils.StatutTransactionEnum;
+import com.estlc.fin_manager.utils.TypeTransactionEnum;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -8,10 +11,10 @@ import java.time.LocalDateTime;
  */
 public record TransactionDto(
         Long numTransac,
-        String typeTransac,
+        TypeTransactionEnum typeTransac,
         LocalDateTime dateTransac,
         BigDecimal montantTransac,
-        String statutTransac,
+        StatutTransactionEnum statutTransac,
         Long accountId
 ) {
 }

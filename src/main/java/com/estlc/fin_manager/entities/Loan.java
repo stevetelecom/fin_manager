@@ -21,6 +21,7 @@ public class Loan {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_credit")
     private Long idCredit;
 
     @Column(nullable = false, precision = 19, scale = 2)
@@ -34,6 +35,6 @@ public class Loan {
 
     // * Crédits sont rattachés à 1 Compte
     @ManyToOne(optional = false)
-    @JoinColumn(name = "account_id")
+    @JoinColumn(name = "account_id", referencedColumnName = "num_compte") // PK de Account = num_compte
     private Account account;
 }

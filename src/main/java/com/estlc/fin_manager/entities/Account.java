@@ -1,5 +1,7 @@
 package com.estlc.fin_manager.entities;
 
+import com.estlc.fin_manager.utils.StatutCompteEnum;
+import com.estlc.fin_manager.utils.TypeCompteEnum;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,6 +24,7 @@ public class Account {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "num_compte")
     private Long numCompte;
 
     @Column(nullable = false, precision = 19, scale = 2)
@@ -29,20 +32,22 @@ public class Account {
 
     private String intituleCompte;
 
-    private String typeCompte;
+    @Enumerated(EnumType.STRING)
+    private TypeCompteEnum typeCompte; // COURANT ou EPARGNE
 
     private LocalDate dateOuverture;
 
-    private String statutCompte;
+    @Enumerated(EnumType.STRING)
+    private StatutCompteEnum statutCompte; // PENDING, ACTIVE, BLOQUE, INACTIVE
 
     // * Comptes appartiennent à 1 User
     @ManyToOne(optional = false)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", referencedColumnName = "cni") // la PK de User est la CNI
     private User user;
 
     // * Comptes sont rattachés à 1 Agence
     @ManyToOne
-    @JoinColumn(name = "agency_id")
+    @JoinColumn(name = "agency_id", referencedColumnName = "num_ag") // PK de Agency = num_ag
     private Agency agency;
 
     // 1 Compte possède * Transactions

@@ -19,6 +19,7 @@ public class Notification {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_notification")
     private Long idNotification;
 
     private String typeNot;
@@ -30,6 +31,6 @@ public class Notification {
 
     // Chaque Notification est liée à 1 Transaction (côté propriétaire de la relation)
     @OneToOne(optional = false)
-    @JoinColumn(name = "transaction_id", unique = true)
+    @JoinColumn(name = "transaction_id", referencedColumnName = "num_transac", unique = true) // PK de Transaction = num_transac
     private Transaction transaction;
 }

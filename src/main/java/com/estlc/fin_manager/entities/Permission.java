@@ -5,8 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Permission (droit d'action) pouvant être attribuée à plusieurs rôles.
@@ -20,6 +20,7 @@ public class Permission {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_per")
     private Long idPer;
 
     @Column(nullable = false, unique = true)
@@ -29,5 +30,5 @@ public class Permission {
 
     // * Permissions <-> * Roles (côté inverse, géré par Role.permissions)
     @ManyToMany(mappedBy = "permissions")
-    private Set<Role> roles = new HashSet<>();
+    private List<Role> roles = new ArrayList<>(); // une permission doit pouvoir voir la liste de ses rôles
 }

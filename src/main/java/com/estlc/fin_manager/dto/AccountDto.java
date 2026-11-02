@@ -1,5 +1,8 @@
 package com.estlc.fin_manager.dto;
 
+import com.estlc.fin_manager.utils.StatutCompteEnum;
+import com.estlc.fin_manager.utils.TypeCompteEnum;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -10,10 +13,10 @@ public record AccountDto(
         Long numCompte,
         BigDecimal solde,
         String intituleCompte,
-        String typeCompte,
+        TypeCompteEnum typeCompte,
         LocalDate dateOuverture,
-        String statutCompte,
-        Long userId,
+        StatutCompteEnum statutCompte,
+        String userId,
         Long agencyId
 ) {
 }
