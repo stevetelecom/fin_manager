@@ -9,6 +9,10 @@ Toutes les requêtes avec un body doivent avoir l'en-tête :
 Content-Type: application/json
 ```
 
+> **Format des dates**
+> - **En entrée** (body JSON) : format ISO → `2026-11-03` pour une date, `2026-11-03T10:00:00` pour une date-heure.
+> - **En sortie** (réponse JSON) : `03-11-2026` pour une date, `03-11-2026 10:00:00` pour une date-heure.
+
 ---
 
 ## 1. Variables d'environnement Insomnia
@@ -261,6 +265,8 @@ POST {{ _.base_url }}/api/v1/users
 Réponse attendue : `201 Created`  
 → recopier `idUser` dans `userId`.  
 La CNI est générée automatiquement, par exemple `USER_A1B2C`.
+
+> `roleIds` est accepté dans le body (ex. `"roleIds": [1]`) mais **n'est pas traité** par le service utilisateur. Les rôles se gèrent via `/api/roles`.
 
 ### Lister les utilisateurs
 
@@ -662,3 +668,133 @@ Réponse `400 Bad Request` :
   }
 }
 ```
+
+---
+
+## 14. Exemples de réponses complètes
+
+Ces exemples correspondent exactement à ce que l'API renvoie (identifiants et CNI générés côté serveur).
+
+### Permission créée — `201 Created`
+
+```json
+{
+  "idPer": 1,
+  "nomPer": "CREATE_USER",
+  "descriptionPer": "Permet de creer un utilisateur"
+}
+```
+
+### Role créé — `201 Created`
+
+```json
+{
+  "idRole": 1,
+  "nomRole": "ADMIN",
+  "description": "Administrateur",
+  "permissionIds": [1]
+}
+```
+
+### Agence créée — `201 Created`
+
+```json
+{
+  "numAg": 1,
+  "longitude": 11.5021,
+  "latitude": 3.848,
+  "nomAg": "Agence Yaounde Centre",
+  "telAg": "222222222",
+  "emailAg": "yaounde.centre@finmanager.cm"
+}
+```
+
+### Utilisateur créé — `201 Created`
+
+```json
+{
+  "idUser": "USER_A1B2C",
+  "nomUser": "Nkondjo",
+  "prenomUser": "Olivier",
+  "email": "olivier.nkondjo@test.cm",
+  "phone": "690000000",
+  "dateN": "15-05-1995 00:00:00",
+  "sexe": "MASCULIN",
+  "profession": "Ingenieur",
+  "password": "secret123",
+  "roleIds": []
+}
+```
+
+> `idUser` correspond à la CNI (`USER_XXXXX`) : c'est cet identifiant qui sert dans `/api/users/{idUser}`.
+
+### Compte créé — `201 Created`
+
+```json
+{
+  "numCompte": 1,
+  "solde": 50000,
+  "intituleCompte": "Compte courant Olivier",
+  "typeCompte": "COURANT",
+  "dateOuverture": "03-11-2026",
+  "statutCompte": "ACTIVE",
+  "userId": "USER_A1B2C",
+  "agencyId": 1
+}
+```
+
+### Transaction créée — `201 Created`
+
+```json
+{
+  "numTransac": 1,
+  "typeTransac": "DEPOT",
+  "dateTransac": "03-11-2026 10:00:00",
+  "montantTransac": 10000,
+  "statutTransac": "VALIDEE",
+  "accountId": 1
+}
+```
+
+### Crédit créé — `201 Created`
+
+```json
+{
+  "idCredit": 1,
+  "montantCredit": 200000,
+  "dateCredit": "03-11-2026",
+  "typeCredit": "CONSOMMATION",
+  "motifCredit": "Achat de materiel",
+  "accountId": 1
+}
+```
+
+### Notification créée — `201 Created`
+
+```json
+{
+  "idNotification": 1,
+  "typeNot": "TRANSACTION",
+  "contenuNot": "Depot de 10 000 FCFA effectue",
+  "dateNot": "03-11-2026 10:01:00",
+  "transactionId": 1
+}
+```
+
+---
+
+## 15. Checklist de test dans Insomnia
+
+1. Créer une permission → récupérer `idPer` → `permissionId`
+2. Créer un rôle avec `permissionIds: [{{ _.permissionId }}]` → récupérer `idRole` → `roleId`
+3. Créer une agence → récupérer `numAg` → `agencyId`
+4. Créer un utilisateur → récupérer `idUser` → `userId`
+5. Créer un compte avec `userId` et `agencyId` → récupérer `numCompte` → `accountId`
+6. Créer une transaction avec `accountId` → récupérer `numTransac` → `transactionId`
+7. Créer un crédit avec `accountId` → récupérer `idCredit` → `loanId`
+8. Créer une notification avec `transactionId` → récupérer `idNotification` → `notificationId`
+9. Tester `GET` liste + `GET` par id sur chaque ressource
+10. Tester `PUT` sur chaque ressource
+11. Tester un `GET` sur un id inexistant → doit renvoyer `404`
+12. Tester un body invalide (ex. email `pas-un-email`) → doit renvoyer `400`
+13. Supprimer dans l'ordre : notification → crédit → transaction → compte → utilisateur → agence → rôle → permission
