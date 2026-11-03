@@ -2,7 +2,7 @@ package com.estlc.fin_manager.controllers;
 
 import com.estlc.fin_manager.dto.LoanRequestDto;
 import com.estlc.fin_manager.dto.LoanResponseDto;
-import com.estlc.fin_manager.services.LoanService;
+import com.estlc.fin_manager.services.interfaces.LoanServiceInterface;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -14,32 +14,32 @@ import java.util.List;
 @RequiredArgsConstructor
 public class LoanController {
 
-    private final LoanService loanService;
+    private final LoanServiceInterface loanService;
 
     @GetMapping
     public List<LoanResponseDto> findAll() {
-        return loanService.findAll();
+        return loanService.getAllLoans();
     }
 
     @GetMapping("/{id}")
     public LoanResponseDto findById(@PathVariable Long id) {
-        return loanService.findById(id);
+        return loanService.getLoanById(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public LoanResponseDto create(@RequestBody LoanRequestDto dto) {
-        return loanService.create(dto);
+        return loanService.saveLoan(dto);
     }
 
     @PutMapping("/{id}")
     public LoanResponseDto update(@PathVariable Long id, @RequestBody LoanRequestDto dto) {
-        return loanService.update(id, dto);
+        return loanService.updateLoan(id, dto);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
-        loanService.delete(id);
+        loanService.deleteLoan(id);
     }
 }

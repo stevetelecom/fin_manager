@@ -1,4 +1,4 @@
-package com.estlc.fin_manager.services;
+package com.estlc.fin_manager.services.implementations;
 
 import com.estlc.fin_manager.dto.AccountRequestDto;
 import com.estlc.fin_manager.dto.AccountResponseDto;
@@ -9,6 +9,7 @@ import com.estlc.fin_manager.mappers.AccountMapper;
 import com.estlc.fin_manager.repositories.AccountRepository;
 import com.estlc.fin_manager.repositories.AgencyRepository;
 import com.estlc.fin_manager.repositories.UserRepository;
+import com.estlc.fin_manager.services.interfaces.AccountServiceInterface;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,27 +19,30 @@ import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
-public class AccountService {
+public class AccountService implements AccountServiceInterface {
 
     private final AccountRepository accountRepository;
     private final UserRepository userRepository;
     private final AgencyRepository agencyRepository;
     private final AccountMapper accountMapper;
 
+    @Override
     @Transactional(readOnly = true)
-    public List<AccountResponseDto> findAll() {
+    public List<AccountResponseDto> getAllAccounts() {
         return accountRepository.findAll().stream()
                 .map(accountMapper::toDTO)
                 .toList();
     }
 
+    @Override
     @Transactional(readOnly = true)
-    public AccountResponseDto findById(Long numCompte) {
+    public AccountResponseDto getAccountById(Long numCompte) {
         return accountMapper.toDTO(getAccount(numCompte));
     }
 
+    @Override
     @Transactional
-    public AccountResponseDto create(AccountRequestDto dto) {
+    public AccountResponseDto saveAccount(AccountRequestDto dto) {
         if (dto.userId() == null || dto.userId().isBlank()) {
             throw new IllegalArgumentException("Le userId (CNI du propriétaire) est obligatoire");
         }
@@ -49,8 +53,9 @@ public class AccountService {
         return accountMapper.toDTO(accountRepository.save(account));
     }
 
+    @Override
     @Transactional
-    public AccountResponseDto update(Long numCompte, AccountRequestDto dto) {
+    public AccountResponseDto updateAccount(Long numCompte, AccountRequestDto dto) {
         Account account = getAccount(numCompte);
         accountMapper.updateEntityFromDto(dto, account);
         if (dto.userId() != null) {
@@ -62,8 +67,9 @@ public class AccountService {
         return accountMapper.toDTO(accountRepository.save(account));
     }
 
+    @Override
     @Transactional
-    public void delete(Long numCompte) {
+    public void deleteAccount(Long numCompte) {
         if (!accountRepository.existsById(numCompte)) {
             throw new NoSuchElementException("Compte introuvable : " + numCompte);
         }

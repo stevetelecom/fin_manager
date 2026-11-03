@@ -1,4 +1,4 @@
-package com.estlc.fin_manager.services;
+package com.estlc.fin_manager.services.implementations;
 
 import com.estlc.fin_manager.dto.LoanRequestDto;
 import com.estlc.fin_manager.dto.LoanResponseDto;
@@ -7,6 +7,7 @@ import com.estlc.fin_manager.entities.Loan;
 import com.estlc.fin_manager.mappers.LoanMapper;
 import com.estlc.fin_manager.repositories.AccountRepository;
 import com.estlc.fin_manager.repositories.LoanRepository;
+import com.estlc.fin_manager.services.interfaces.LoanServiceInterface;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,26 +17,29 @@ import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
-public class LoanService {
+public class LoanService implements LoanServiceInterface {
 
     private final LoanRepository loanRepository;
     private final AccountRepository accountRepository;
     private final LoanMapper loanMapper;
 
+    @Override
     @Transactional(readOnly = true)
-    public List<LoanResponseDto> findAll() {
+    public List<LoanResponseDto> getAllLoans() {
         return loanRepository.findAll().stream()
                 .map(loanMapper::toDTO)
                 .toList();
     }
 
+    @Override
     @Transactional(readOnly = true)
-    public LoanResponseDto findById(Long idCredit) {
+    public LoanResponseDto getLoanById(Long idCredit) {
         return loanMapper.toDTO(getLoan(idCredit));
     }
 
+    @Override
     @Transactional
-    public LoanResponseDto create(LoanRequestDto dto) {
+    public LoanResponseDto saveLoan(LoanRequestDto dto) {
         if (dto.accountId() == null) {
             throw new IllegalArgumentException("Le compte (accountId) est obligatoire");
         }
@@ -45,8 +49,9 @@ public class LoanService {
         return loanMapper.toDTO(loanRepository.save(loan));
     }
 
+    @Override
     @Transactional
-    public LoanResponseDto update(Long idCredit, LoanRequestDto dto) {
+    public LoanResponseDto updateLoan(Long idCredit, LoanRequestDto dto) {
         Loan loan = getLoan(idCredit);
         loanMapper.updateEntityFromDto(dto, loan);
         if (dto.accountId() != null) {
@@ -55,8 +60,9 @@ public class LoanService {
         return loanMapper.toDTO(loanRepository.save(loan));
     }
 
+    @Override
     @Transactional
-    public void delete(Long idCredit) {
+    public void deleteLoan(Long idCredit) {
         if (!loanRepository.existsById(idCredit)) {
             throw new NoSuchElementException("Crédit introuvable : " + idCredit);
         }

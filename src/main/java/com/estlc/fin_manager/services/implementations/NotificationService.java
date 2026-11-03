@@ -1,4 +1,4 @@
-package com.estlc.fin_manager.services;
+package com.estlc.fin_manager.services.implementations;
 
 import com.estlc.fin_manager.dto.NotificationRequestDto;
 import com.estlc.fin_manager.dto.NotificationResponseDto;
@@ -7,6 +7,7 @@ import com.estlc.fin_manager.entities.Transaction;
 import com.estlc.fin_manager.mappers.NotificationMapper;
 import com.estlc.fin_manager.repositories.NotificationRepository;
 import com.estlc.fin_manager.repositories.TransactionRepository;
+import com.estlc.fin_manager.services.interfaces.NotificationServiceInterface;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,26 +17,29 @@ import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
-public class NotificationService {
+public class NotificationService implements NotificationServiceInterface {
 
     private final NotificationRepository notificationRepository;
     private final TransactionRepository transactionRepository;
     private final NotificationMapper notificationMapper;
 
+    @Override
     @Transactional(readOnly = true)
-    public List<NotificationResponseDto> findAll() {
+    public List<NotificationResponseDto> getAllNotifications() {
         return notificationRepository.findAll().stream()
                 .map(notificationMapper::toDTO)
                 .toList();
     }
 
+    @Override
     @Transactional(readOnly = true)
-    public NotificationResponseDto findById(Long idNotification) {
+    public NotificationResponseDto getNotificationById(Long idNotification) {
         return notificationMapper.toDTO(getNotification(idNotification));
     }
 
+    @Override
     @Transactional
-    public NotificationResponseDto create(NotificationRequestDto dto) {
+    public NotificationResponseDto saveNotification(NotificationRequestDto dto) {
         if (dto.transactionId() == null) {
             throw new IllegalArgumentException("La transaction (transactionId) est obligatoire");
         }
@@ -45,8 +49,9 @@ public class NotificationService {
         return notificationMapper.toDTO(notificationRepository.save(notification));
     }
 
+    @Override
     @Transactional
-    public NotificationResponseDto update(Long idNotification, NotificationRequestDto dto) {
+    public NotificationResponseDto updateNotification(Long idNotification, NotificationRequestDto dto) {
         Notification notification = getNotification(idNotification);
         notificationMapper.updateEntityFromDto(dto, notification);
         if (dto.transactionId() != null) {
@@ -55,8 +60,9 @@ public class NotificationService {
         return notificationMapper.toDTO(notificationRepository.save(notification));
     }
 
+    @Override
     @Transactional
-    public void delete(Long idNotification) {
+    public void deleteNotification(Long idNotification) {
         if (!notificationRepository.existsById(idNotification)) {
             throw new NoSuchElementException("Notification introuvable : " + idNotification);
         }
