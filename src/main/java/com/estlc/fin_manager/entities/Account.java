@@ -3,6 +3,9 @@ package com.estlc.fin_manager.entities;
 import com.estlc.fin_manager.utils.StatutCompteEnum;
 import com.estlc.fin_manager.utils.TypeCompteEnum;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,9 +30,13 @@ public class Account {
     @Column(name = "num_compte")
     private Long numCompte;
 
+    @NotNull(message = "Le solde est obligatoire")
+    @PositiveOrZero(message = "Le solde ne peut pas etre negatif")
     @Column(nullable = false, precision = 19, scale = 2)
     private BigDecimal solde = BigDecimal.ZERO;
 
+    @Size(max = 150, message = "L'intitule du compte ne doit pas depasser 150 caracteres")
+    @Column(length = 150)
     private String intituleCompte;
 
     @Enumerated(EnumType.STRING)
@@ -41,6 +48,7 @@ public class Account {
     private StatutCompteEnum statutCompte; // PENDING, ACTIVE, BLOQUE, INACTIVE
 
     // * Comptes appartiennent à 1 User
+    @NotNull(message = "Le proprietaire du compte est obligatoire")
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id", referencedColumnName = "cni") // la PK de User est la CNI
     private User user;

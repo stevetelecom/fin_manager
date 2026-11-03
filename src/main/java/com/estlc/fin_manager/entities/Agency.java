@@ -1,6 +1,9 @@
 package com.estlc.fin_manager.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -29,10 +32,18 @@ public class Agency {
 
     private Double latitude;
 
+    @NotBlank(message = "Le nom de l'agence est obligatoire")
+    @Size(max = 150, message = "Le nom de l'agence ne doit pas depasser 150 caracteres")
+    @Column(length = 150)
     private String nomAg;
 
+    @Size(max = 20, message = "Le telephone de l'agence ne doit pas depasser 20 caracteres")
+    @Column(length = 20)
     private String telAg;
 
+    @Email(message = "L'email de l'agence doit etre valide")
+    @Size(max = 150, message = "L'email de l'agence ne doit pas depasser 150 caracteres")
+    @Column(length = 150)
     private String emailAg;
 
     // 1 Agence regroupe * Comptes

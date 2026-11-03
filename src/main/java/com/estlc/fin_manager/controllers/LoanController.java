@@ -1,5 +1,7 @@
 package com.estlc.fin_manager.controllers;
 
+import jakarta.validation.Valid;
+
 import com.estlc.fin_manager.dto.LoanRequestDto;
 import com.estlc.fin_manager.dto.LoanResponseDto;
 import com.estlc.fin_manager.services.interfaces.LoanServiceInterface;
@@ -28,12 +30,12 @@ public class LoanController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public LoanResponseDto create(@RequestBody LoanRequestDto dto) {
+    public LoanResponseDto create(@Valid @RequestBody LoanRequestDto dto) {
         return loanService.saveLoan(dto);
     }
 
     @PutMapping("/{id}")
-    public LoanResponseDto update(@PathVariable Long id, @RequestBody LoanRequestDto dto) {
+    public LoanResponseDto update(@PathVariable Long id, @Valid @RequestBody LoanRequestDto dto) {
         return loanService.updateLoan(id, dto);
     }
 

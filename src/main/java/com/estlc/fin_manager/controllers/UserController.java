@@ -1,5 +1,7 @@
 package com.estlc.fin_manager.controllers;
 
+import jakarta.validation.Valid;
+
 import com.estlc.fin_manager.dto.UserRequestDto;
 import com.estlc.fin_manager.dto.UserResponseDto;
 import com.estlc.fin_manager.services.interfaces.UserServiceInterface;
@@ -28,12 +30,12 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UserResponseDto create(@RequestBody UserRequestDto dto) {
+    public UserResponseDto create(@Valid @RequestBody UserRequestDto dto) {
         return userService.saveUser(dto);
     }
 
     @PutMapping("/{id}")
-    public UserResponseDto update(@PathVariable String id, @RequestBody UserRequestDto dto) {
+    public UserResponseDto update(@PathVariable String id, @Valid @RequestBody UserRequestDto dto) {
         return userService.updateUser(id, dto);
     }
 

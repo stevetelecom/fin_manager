@@ -1,5 +1,7 @@
 package com.estlc.fin_manager.controllers;
 
+import jakarta.validation.Valid;
+
 import com.estlc.fin_manager.dto.AccountRequestDto;
 import com.estlc.fin_manager.dto.AccountResponseDto;
 import com.estlc.fin_manager.services.interfaces.AccountServiceInterface;
@@ -28,12 +30,12 @@ public class AccountController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public AccountResponseDto create(@RequestBody AccountRequestDto dto) {
+    public AccountResponseDto create(@Valid @RequestBody AccountRequestDto dto) {
         return accountService.saveAccount(dto);
     }
 
     @PutMapping("/{id}")
-    public AccountResponseDto update(@PathVariable Long id, @RequestBody AccountRequestDto dto) {
+    public AccountResponseDto update(@PathVariable Long id, @Valid @RequestBody AccountRequestDto dto) {
         return accountService.updateAccount(id, dto);
     }
 

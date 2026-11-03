@@ -1,5 +1,7 @@
 package com.estlc.fin_manager.controllers;
 
+import jakarta.validation.Valid;
+
 import com.estlc.fin_manager.dto.NotificationRequestDto;
 import com.estlc.fin_manager.dto.NotificationResponseDto;
 import com.estlc.fin_manager.services.interfaces.NotificationServiceInterface;
@@ -28,12 +30,12 @@ public class NotificationController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public NotificationResponseDto create(@RequestBody NotificationRequestDto dto) {
+    public NotificationResponseDto create(@Valid @RequestBody NotificationRequestDto dto) {
         return notificationService.saveNotification(dto);
     }
 
     @PutMapping("/{id}")
-    public NotificationResponseDto update(@PathVariable Long id, @RequestBody NotificationRequestDto dto) {
+    public NotificationResponseDto update(@PathVariable Long id, @Valid @RequestBody NotificationRequestDto dto) {
         return notificationService.updateNotification(id, dto);
     }
 

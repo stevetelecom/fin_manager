@@ -1,5 +1,7 @@
 package com.estlc.fin_manager.controllers;
 
+import jakarta.validation.Valid;
+
 import com.estlc.fin_manager.dto.TransactionRequestDto;
 import com.estlc.fin_manager.dto.TransactionResponseDto;
 import com.estlc.fin_manager.services.interfaces.TransactionServiceInterface;
@@ -28,12 +30,12 @@ public class TransactionController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public TransactionResponseDto create(@RequestBody TransactionRequestDto dto) {
+    public TransactionResponseDto create(@Valid @RequestBody TransactionRequestDto dto) {
         return transactionService.saveTransaction(dto);
     }
 
     @PutMapping("/{id}")
-    public TransactionResponseDto update(@PathVariable Long id, @RequestBody TransactionRequestDto dto) {
+    public TransactionResponseDto update(@PathVariable Long id, @Valid @RequestBody TransactionRequestDto dto) {
         return transactionService.updateTransaction(id, dto);
     }
 

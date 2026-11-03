@@ -1,5 +1,7 @@
 package com.estlc.fin_manager.controllers;
 
+import jakarta.validation.Valid;
+
 import com.estlc.fin_manager.dto.AgencyRequestDto;
 import com.estlc.fin_manager.dto.AgencyResponseDto;
 import com.estlc.fin_manager.services.interfaces.AgencyServiceInterface;
@@ -28,12 +30,12 @@ public class AgencyController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public AgencyResponseDto create(@RequestBody AgencyRequestDto dto) {
+    public AgencyResponseDto create(@Valid @RequestBody AgencyRequestDto dto) {
         return agencyService.saveAgency(dto);
     }
 
     @PutMapping("/{id}")
-    public AgencyResponseDto update(@PathVariable Long id, @RequestBody AgencyRequestDto dto) {
+    public AgencyResponseDto update(@PathVariable Long id, @Valid @RequestBody AgencyRequestDto dto) {
         return agencyService.updateAgency(id, dto);
     }
 

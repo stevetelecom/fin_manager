@@ -1,6 +1,8 @@
 package com.estlc.fin_manager.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,9 +25,13 @@ public class Role {
     @Column(name = "role_id")
     private Long idRole; // colonne role_id pour correspondre aux referencedColumnName des tables de jointure
 
-    @Column(nullable = false, unique = true)
+    @NotBlank(message = "Le nom du role est obligatoire")
+    @Size(max = 50, message = "Le nom du role ne doit pas depasser 50 caracteres")
+    @Column(nullable = false, unique = true, length = 50)
     private String nomRole;
 
+    @Size(max = 255, message = "La description du role ne doit pas depasser 255 caracteres")
+    @Column(length = 255)
     private String description;
 
     // * Roles <-> * Users (côté inverse, géré par User.roles)

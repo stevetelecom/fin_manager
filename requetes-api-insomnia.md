@@ -611,3 +611,54 @@ Statuts attendus :
 - `204 No Content` : suppression
 - `400 Bad Request` : donnée invalide (ex. `userId` manquant pour un compte)
 - `404 Not Found` : identifiant inexistant
+
+---
+
+## 13. Contraintes de validation
+
+Les champs suivants sont **obligatoires** dans les bodies JSON. Un champ manquant, vide ou invalide renvoie `400 Bad Request`.
+
+| Ressource | Champs obligatoires | Règles |
+|---|---|---|
+| Permission | `nomPer` | non vide, max 100 caractères |
+| Role | `nomRole` | non vide, max 50 caractères |
+| Agence | `longitude`, `latitude`, `nomAg`, `telAg`, `emailAg` | nom non vide (max 150), téléphone max 20, email valide (max 150) |
+| Utilisateur | `nomUser`, `email`, `phone`, `dateN`, `sexe`, `profession`, `password` | email valide (max 150), téléphone max 20, dates dans le passé, max 100 pour nom/prénom/profession, mot de passe max 255 |
+| Compte | `solde`, `intituleCompte`, `typeCompte`, `dateOuverture`, `statutCompte`, `userId` | solde >= 0, intitulé non vide (max 150) |
+| Transaction | `typeTransac`, `dateTransac`, `montantTransac`, `statutTransac`, `accountId` | montant > 0 |
+| Crédit | `montantCredit`, `dateCredit`, `typeCredit`, `accountId` | montant > 0, type non vide (max 50), motif max 255 |
+| Notification | `typeNot`, `contenuNot`, `dateNot`, `transactionId` | type non vide (max 50), contenu non vide (max 1000) |
+
+`idUser`, `numCompte`, `numTransac`, `idCredit`, `idNotification`, `idPer`, `idRole`, `numAg` ne doivent **pas** être envoyés : ils sont générés par le serveur.
+
+### Exemple d'erreur de validation
+
+Requête :
+
+```http
+POST {{ _.base_url }}/api/users
+```
+
+```json
+{
+  "prenomUser": "Api",
+  "email": "pas-un-email",
+  "phone": "699000000",
+  "dateN": "1990-01-01T00:00:00",
+  "sexe": "MASCULIN",
+  "profession": "Etudiant",
+  "password": "secret123"
+}
+```
+
+Réponse `400 Bad Request` :
+
+```json
+{
+  "erreur": "Validation echouee",
+  "champs": {
+    "nomUser": "Le nom est obligatoire",
+    "email": "L'email doit etre valide"
+  }
+}
+```

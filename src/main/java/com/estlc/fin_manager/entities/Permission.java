@@ -1,6 +1,8 @@
 package com.estlc.fin_manager.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,9 +25,13 @@ public class Permission {
     @Column(name = "id_per")
     private Long idPer;
 
-    @Column(nullable = false, unique = true)
+    @NotBlank(message = "Le nom de la permission est obligatoire")
+    @Size(max = 100, message = "Le nom de la permission ne doit pas depasser 100 caracteres")
+    @Column(nullable = false, unique = true, length = 100)
     private String nomPer;
 
+    @Size(max = 255, message = "La description de la permission ne doit pas depasser 255 caracteres")
+    @Column(length = 255)
     private String descriptionPer;
 
     // * Permissions <-> * Roles (côté inverse, géré par Role.permissions)

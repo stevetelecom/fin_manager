@@ -1,5 +1,7 @@
 package com.estlc.fin_manager.controllers;
 
+import jakarta.validation.Valid;
+
 import com.estlc.fin_manager.dto.PermissionRequestDto;
 import com.estlc.fin_manager.dto.PermissionResponseDto;
 import com.estlc.fin_manager.services.interfaces.PermissionServiceInterface;
@@ -28,12 +30,12 @@ public class PermissionController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public PermissionResponseDto create(@RequestBody PermissionRequestDto dto) {
+    public PermissionResponseDto create(@Valid @RequestBody PermissionRequestDto dto) {
         return permissionService.savePermission(dto);
     }
 
     @PutMapping("/{id}")
-    public PermissionResponseDto update(@PathVariable Long id, @RequestBody PermissionRequestDto dto) {
+    public PermissionResponseDto update(@PathVariable Long id, @Valid @RequestBody PermissionRequestDto dto) {
         return permissionService.updatePermission(id, dto);
     }
 

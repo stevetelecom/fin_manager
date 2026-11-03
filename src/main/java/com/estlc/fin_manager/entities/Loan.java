@@ -1,6 +1,8 @@
 package com.estlc.fin_manager.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,6 +26,8 @@ public class Loan {
     @Column(name = "id_credit")
     private Long idCredit;
 
+    @NotNull(message = "Le montant du credit est obligatoire")
+    @Positive(message = "Le montant du credit doit etre positif")
     @Column(nullable = false, precision = 19, scale = 2)
     private BigDecimal montantCredit;
 
@@ -34,6 +38,7 @@ public class Loan {
     private String motifCredit;
 
     // * Crédits sont rattachés à 1 Compte
+    @NotNull(message = "Le compte du credit est obligatoire")
     @ManyToOne(optional = false)
     @JoinColumn(name = "account_id", referencedColumnName = "num_compte") // PK de Account = num_compte
     private Account account;

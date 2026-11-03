@@ -3,6 +3,8 @@ package com.estlc.fin_manager.entities;
 import com.estlc.fin_manager.utils.StatutTransactionEnum;
 import com.estlc.fin_manager.utils.TypeTransactionEnum;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -30,6 +32,8 @@ public class Transaction {
 
     private LocalDateTime dateTransac;
 
+    @NotNull(message = "Le montant de la transaction est obligatoire")
+    @Positive(message = "Le montant de la transaction doit etre positif")
     @Column(nullable = false, precision = 19, scale = 2)
     private BigDecimal montantTransac;
 
@@ -37,6 +41,7 @@ public class Transaction {
     private StatutTransactionEnum statutTransac; // PENDING, VALIDEE, ANNULEE, ECHOUEE
 
     // * Transactions concernent 1 Compte
+    @NotNull(message = "Le compte de la transaction est obligatoire")
     @ManyToOne(optional = false)
     @JoinColumn(name = "account_id", referencedColumnName = "num_compte") // PK de Account = num_compte
     private Account account;

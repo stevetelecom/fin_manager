@@ -2,6 +2,10 @@ package com.estlc.fin_manager.entities;
 
 import com.estlc.fin_manager.utils.SexEnum;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,24 +29,39 @@ public class User {
     @Column(name = "cni", nullable = false, unique = true)
     private String idUser; // CNI de l'utilisateur : clé primaire (String)
 
-    @Column(nullable = false) // @Basic(optionel = false)
+    @NotBlank(message = "Le nom est obligatoire")
+    @Size(max = 100, message = "Le nom ne doit pas depasser 100 caracteres")
+    @Column(nullable = false, length = 100)
     private String nomUser;
 
+    @Size(max = 100, message = "Le prenom ne doit pas depasser 100 caracteres")
+    @Column(length = 100)
     private String prenomUser; // user a un champ Date
 
-    @Column(nullable = false, unique = true)
+    @NotBlank(message = "L'email est obligatoire")
+    @Email(message = "L'email doit etre valide")
+    @Size(max = 150, message = "L'email ne doit pas depasser 150 caracteres")
+    @Column(nullable = false, unique = true, length = 150)
     private String email;
 
+    @Size(max = 20, message = "Le telephone ne doit pas depasser 20 caracteres")
+    @Column(length = 20)
     private String phone;
 
+    @Past(message = "La date de naissance doit etre dans le passe")
     private LocalDateTime dateN; // unique champ date de l'utilisateur
 
     @Enumerated(EnumType.STRING)
     private SexEnum sexe; // enum partagé depuis le dossier utils
 
+    @Size(max = 100, message = "La profession ne doit pas depasser 100 caracteres")
+    @Column(length = 100)
     private String profession;
-    @Basic(optional = false)
-    private String  password;
+
+    @NotBlank(message = "Le mot de passe est obligatoire")
+    @Size(max = 255, message = "Le mot de passe ne doit pas depasser 255 caracteres")
+    @Column(nullable = false, length = 255)
+    private String password;
 
     // 1 User possède * Comptes
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
