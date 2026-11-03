@@ -7,9 +7,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * DTO de Transaction : accountId remplace l'objet Account.
+ * DTO d'entrée pour Transaction : accountId remplace l'objet Account.
  */
-public record TransactionDto(
+public record TransactionRequestDto(
         Long numTransac,
         TypeTransactionEnum typeTransac,
         LocalDateTime dateTransac,

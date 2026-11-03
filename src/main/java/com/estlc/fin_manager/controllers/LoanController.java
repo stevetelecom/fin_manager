@@ -1,6 +1,7 @@
 package com.estlc.fin_manager.controllers;
 
-import com.estlc.fin_manager.dto.LoanDto;
+import com.estlc.fin_manager.dto.LoanRequestDto;
+import com.estlc.fin_manager.dto.LoanResponseDto;
 import com.estlc.fin_manager.services.LoanService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,23 +17,23 @@ public class LoanController {
     private final LoanService loanService;
 
     @GetMapping
-    public List<LoanDto> findAll() {
+    public List<LoanResponseDto> findAll() {
         return loanService.findAll();
     }
 
     @GetMapping("/{id}")
-    public LoanDto findById(@PathVariable Long id) {
+    public LoanResponseDto findById(@PathVariable Long id) {
         return loanService.findById(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public LoanDto create(@RequestBody LoanDto dto) {
+    public LoanResponseDto create(@RequestBody LoanRequestDto dto) {
         return loanService.create(dto);
     }
 
     @PutMapping("/{id}")
-    public LoanDto update(@PathVariable Long id, @RequestBody LoanDto dto) {
+    public LoanResponseDto update(@PathVariable Long id, @RequestBody LoanRequestDto dto) {
         return loanService.update(id, dto);
     }
 

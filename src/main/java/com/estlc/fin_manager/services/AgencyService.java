@@ -1,6 +1,7 @@
 package com.estlc.fin_manager.services;
 
-import com.estlc.fin_manager.dto.AgencyDto;
+import com.estlc.fin_manager.dto.AgencyRequestDto;
+import com.estlc.fin_manager.dto.AgencyResponseDto;
 import com.estlc.fin_manager.entities.Agency;
 import com.estlc.fin_manager.mappers.AgencyMapper;
 import com.estlc.fin_manager.repositories.AgencyRepository;
@@ -19,28 +20,28 @@ public class AgencyService {
     private final AgencyMapper agencyMapper;
 
     @Transactional(readOnly = true)
-    public List<AgencyDto> findAll() {
+    public List<AgencyResponseDto> findAll() {
         return agencyRepository.findAll().stream()
-                .map(agencyMapper::toDto)
+                .map(agencyMapper::toResponseDto)
                 .toList();
     }
 
     @Transactional(readOnly = true)
-    public AgencyDto findById(Long numAg) {
-        return agencyMapper.toDto(getAgency(numAg));
+    public AgencyResponseDto findById(Long numAg) {
+        return agencyMapper.toResponseDto(getAgency(numAg));
     }
 
     @Transactional
-    public AgencyDto create(AgencyDto dto) {
+    public AgencyResponseDto create(AgencyRequestDto dto) {
         Agency agency = agencyMapper.toEntity(dto);
-        return agencyMapper.toDto(agencyRepository.save(agency));
+        return agencyMapper.toResponseDto(agencyRepository.save(agency));
     }
 
     @Transactional
-    public AgencyDto update(Long numAg, AgencyDto dto) {
+    public AgencyResponseDto update(Long numAg, AgencyRequestDto dto) {
         Agency agency = getAgency(numAg);
         agencyMapper.apply(dto, agency);
-        return agencyMapper.toDto(agencyRepository.save(agency));
+        return agencyMapper.toResponseDto(agencyRepository.save(agency));
     }
 
     @Transactional

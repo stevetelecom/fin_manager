@@ -1,6 +1,7 @@
 package com.estlc.fin_manager.services;
 
-import com.estlc.fin_manager.dto.PermissionDto;
+import com.estlc.fin_manager.dto.PermissionRequestDto;
+import com.estlc.fin_manager.dto.PermissionResponseDto;
 import com.estlc.fin_manager.entities.Permission;
 import com.estlc.fin_manager.mappers.PermissionMapper;
 import com.estlc.fin_manager.repositories.PermissionRepository;
@@ -19,28 +20,28 @@ public class PermissionService {
     private final PermissionMapper permissionMapper;
 
     @Transactional(readOnly = true)
-    public List<PermissionDto> findAll() {
+    public List<PermissionResponseDto> findAll() {
         return permissionRepository.findAll().stream()
-                .map(permissionMapper::toDto)
+                .map(permissionMapper::toResponseDto)
                 .toList();
     }
 
     @Transactional(readOnly = true)
-    public PermissionDto findById(Long idPer) {
-        return permissionMapper.toDto(getPermission(idPer));
+    public PermissionResponseDto findById(Long idPer) {
+        return permissionMapper.toResponseDto(getPermission(idPer));
     }
 
     @Transactional
-    public PermissionDto create(PermissionDto dto) {
+    public PermissionResponseDto create(PermissionRequestDto dto) {
         Permission permission = permissionMapper.toEntity(dto);
-        return permissionMapper.toDto(permissionRepository.save(permission));
+        return permissionMapper.toResponseDto(permissionRepository.save(permission));
     }
 
     @Transactional
-    public PermissionDto update(Long idPer, PermissionDto dto) {
+    public PermissionResponseDto update(Long idPer, PermissionRequestDto dto) {
         Permission permission = getPermission(idPer);
         permissionMapper.apply(dto, permission);
-        return permissionMapper.toDto(permissionRepository.save(permission));
+        return permissionMapper.toResponseDto(permissionRepository.save(permission));
     }
 
     @Transactional

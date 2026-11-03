@@ -1,6 +1,7 @@
 package com.estlc.fin_manager.services;
 
-import com.estlc.fin_manager.dto.UserDto;
+import com.estlc.fin_manager.dto.UserRequestDto;
+import com.estlc.fin_manager.dto.UserResponseDto;
 import com.estlc.fin_manager.entities.Role;
 import com.estlc.fin_manager.entities.User;
 import com.estlc.fin_manager.mappers.UserMapper;
@@ -24,39 +25,42 @@ public class UserService {
     private final UserMapper userMapper;
 
     @Transactional(readOnly = true)
-    public List<UserDto> findAll() {
+    public List<UserResponseDto> findAll() {
         return userRepository.findAll().stream()
-                .map(userMapper::toDto)
+                .map(userMapper::toResponseDto)
                 .toList();
     }
 
     @Transactional(readOnly = true)
-    public UserDto findById(String idUser) {
-        return userMapper.toDto(getUser(idUser));
+    public UserResponseDto findById(String idUser) {
+        return userMapper.toResponseDto(getUser(idUser));
     }
 
     @Transactional
-    public UserDto create(UserDto dto) {
+    public UserResponseDto create(UserRequestDto dto) {
         if (dto.idUser() == null || dto.idUser().isBlank()) {
             throw new IllegalArgumentException("La CNI (idUser) est obligatoire");
         }
         if (userRepository.existsById(dto.idUser())) {
             throw new IllegalArgumentException("Un utilisateur avec cette CNI existe déjà : " + dto.idUser());
         }
+        if (dto.password() == null || dto.password().isBlank()) {
+            throw new IllegalArgumentException("Le mot de passe (password) est obligatoire");
+        }
 
         User user = userMapper.toEntity(dto);
         user.setRoles(resolveRoles(dto.roleIds()));
-        return userMapper.toDto(userRepository.save(user));
+        return userMapper.toResponseDto(userRepository.save(user));
     }
 
     @Transactional
-    public UserDto update(String idUser, UserDto dto) {
+    public UserResponseDto update(String idUser, UserRequestDto dto) {
         User user = getUser(idUser);
         userMapper.apply(dto, user);
         if (dto.roleIds() != null) {
             user.setRoles(resolveRoles(dto.roleIds()));
         }
-        return userMapper.toDto(userRepository.save(user));
+        return userMapper.toResponseDto(userRepository.save(user));
     }
 
     @Transactional

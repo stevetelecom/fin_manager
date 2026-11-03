@@ -1,6 +1,7 @@
 package com.estlc.fin_manager.controllers;
 
-import com.estlc.fin_manager.dto.AccountDto;
+import com.estlc.fin_manager.dto.AccountRequestDto;
+import com.estlc.fin_manager.dto.AccountResponseDto;
 import com.estlc.fin_manager.services.AccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,23 +17,23 @@ public class AccountController {
     private final AccountService accountService;
 
     @GetMapping
-    public List<AccountDto> findAll() {
+    public List<AccountResponseDto> findAll() {
         return accountService.findAll();
     }
 
     @GetMapping("/{id}")
-    public AccountDto findById(@PathVariable Long id) {
+    public AccountResponseDto findById(@PathVariable Long id) {
         return accountService.findById(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public AccountDto create(@RequestBody AccountDto dto) {
+    public AccountResponseDto create(@RequestBody AccountRequestDto dto) {
         return accountService.create(dto);
     }
 
     @PutMapping("/{id}")
-    public AccountDto update(@PathVariable Long id, @RequestBody AccountDto dto) {
+    public AccountResponseDto update(@PathVariable Long id, @RequestBody AccountRequestDto dto) {
         return accountService.update(id, dto);
     }
 

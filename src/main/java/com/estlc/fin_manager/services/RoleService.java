@@ -1,6 +1,7 @@
 package com.estlc.fin_manager.services;
 
-import com.estlc.fin_manager.dto.RoleDto;
+import com.estlc.fin_manager.dto.RoleRequestDto;
+import com.estlc.fin_manager.dto.RoleResponseDto;
 import com.estlc.fin_manager.entities.Permission;
 import com.estlc.fin_manager.entities.Role;
 import com.estlc.fin_manager.mappers.RoleMapper;
@@ -24,32 +25,32 @@ public class RoleService {
     private final RoleMapper roleMapper;
 
     @Transactional(readOnly = true)
-    public List<RoleDto> findAll() {
+    public List<RoleResponseDto> findAll() {
         return roleRepository.findAll().stream()
-                .map(roleMapper::toDto)
+                .map(roleMapper::toResponseDto)
                 .toList();
     }
 
     @Transactional(readOnly = true)
-    public RoleDto findById(Long idRole) {
-        return roleMapper.toDto(getRole(idRole));
+    public RoleResponseDto findById(Long idRole) {
+        return roleMapper.toResponseDto(getRole(idRole));
     }
 
     @Transactional
-    public RoleDto create(RoleDto dto) {
+    public RoleResponseDto create(RoleRequestDto dto) {
         Role role = roleMapper.toEntity(dto);
         role.setPermissions(resolvePermissions(dto.permissionIds()));
-        return roleMapper.toDto(roleRepository.save(role));
+        return roleMapper.toResponseDto(roleRepository.save(role));
     }
 
     @Transactional
-    public RoleDto update(Long idRole, RoleDto dto) {
+    public RoleResponseDto update(Long idRole, RoleRequestDto dto) {
         Role role = getRole(idRole);
         roleMapper.apply(dto, role);
         if (dto.permissionIds() != null) {
             role.setPermissions(resolvePermissions(dto.permissionIds()));
         }
-        return roleMapper.toDto(roleRepository.save(role));
+        return roleMapper.toResponseDto(roleRepository.save(role));
     }
 
     @Transactional

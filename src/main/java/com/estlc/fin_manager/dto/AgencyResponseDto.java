@@ -1,9 +1,9 @@
 package com.estlc.fin_manager.dto;
 
 /**
- * DTO de Agency.
+ * DTO de sortie pour Agency.
  */
-public record AgencyDto(
+public record AgencyResponseDto(
         Long numAg,
         Double longitude,
         Double latitude,

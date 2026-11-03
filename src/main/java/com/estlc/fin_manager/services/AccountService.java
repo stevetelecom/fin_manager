@@ -1,6 +1,7 @@
 package com.estlc.fin_manager.services;
 
-import com.estlc.fin_manager.dto.AccountDto;
+import com.estlc.fin_manager.dto.AccountRequestDto;
+import com.estlc.fin_manager.dto.AccountResponseDto;
 import com.estlc.fin_manager.entities.Account;
 import com.estlc.fin_manager.entities.Agency;
 import com.estlc.fin_manager.entities.User;
@@ -25,19 +26,19 @@ public class AccountService {
     private final AccountMapper accountMapper;
 
     @Transactional(readOnly = true)
-    public List<AccountDto> findAll() {
+    public List<AccountResponseDto> findAll() {
         return accountRepository.findAll().stream()
-                .map(accountMapper::toDto)
+                .map(accountMapper::toResponseDto)
                 .toList();
     }
 
     @Transactional(readOnly = true)
-    public AccountDto findById(Long numCompte) {
-        return accountMapper.toDto(getAccount(numCompte));
+    public AccountResponseDto findById(Long numCompte) {
+        return accountMapper.toResponseDto(getAccount(numCompte));
     }
 
     @Transactional
-    public AccountDto create(AccountDto dto) {
+    public AccountResponseDto create(AccountRequestDto dto) {
         if (dto.userId() == null || dto.userId().isBlank()) {
             throw new IllegalArgumentException("Le userId (CNI du propriétaire) est obligatoire");
         }
@@ -45,11 +46,11 @@ public class AccountService {
         Account account = accountMapper.toEntity(dto);
         account.setUser(getUser(dto.userId()));
         account.setAgency(resolveAgency(dto.agencyId()));
-        return accountMapper.toDto(accountRepository.save(account));
+        return accountMapper.toResponseDto(accountRepository.save(account));
     }
 
     @Transactional
-    public AccountDto update(Long numCompte, AccountDto dto) {
+    public AccountResponseDto update(Long numCompte, AccountRequestDto dto) {
         Account account = getAccount(numCompte);
         accountMapper.apply(dto, account);
         if (dto.userId() != null) {
@@ -58,7 +59,7 @@ public class AccountService {
         if (dto.agencyId() != null) {
             account.setAgency(resolveAgency(dto.agencyId()));
         }
-        return accountMapper.toDto(accountRepository.save(account));
+        return accountMapper.toResponseDto(accountRepository.save(account));
     }
 
     @Transactional

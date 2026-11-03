@@ -7,9 +7,9 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 /**
- * DTO de Account : userId et agencyId remplacent les objets User et Agency.
+ * DTO d'entrée pour Account : userId et agencyId remplacent les objets User et Agency.
  */
-public record AccountDto(
+public record AccountRequestDto(
         Long numCompte,
         BigDecimal solde,
         String intituleCompte,

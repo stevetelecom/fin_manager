@@ -3,9 +3,9 @@ package com.estlc.fin_manager.dto;
 import java.time.LocalDateTime;
 
 /**
- * DTO de Notification : transactionId remplace l'objet Transaction.
+ * DTO d'entrée pour Notification : transactionId remplace l'objet Transaction.
  */
-public record NotificationDto(
+public record NotificationRequestDto(
         Long idNotification,
         String typeNot,
         String contenuNot,

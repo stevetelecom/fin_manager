@@ -1,6 +1,7 @@
 package com.estlc.fin_manager.controllers;
 
-import com.estlc.fin_manager.dto.PermissionDto;
+import com.estlc.fin_manager.dto.PermissionRequestDto;
+import com.estlc.fin_manager.dto.PermissionResponseDto;
 import com.estlc.fin_manager.services.PermissionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,23 +17,23 @@ public class PermissionController {
     private final PermissionService permissionService;
 
     @GetMapping
-    public List<PermissionDto> findAll() {
+    public List<PermissionResponseDto> findAll() {
         return permissionService.findAll();
     }
 
     @GetMapping("/{id}")
-    public PermissionDto findById(@PathVariable Long id) {
+    public PermissionResponseDto findById(@PathVariable Long id) {
         return permissionService.findById(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public PermissionDto create(@RequestBody PermissionDto dto) {
+    public PermissionResponseDto create(@RequestBody PermissionRequestDto dto) {
         return permissionService.create(dto);
     }
 
     @PutMapping("/{id}")
-    public PermissionDto update(@PathVariable Long id, @RequestBody PermissionDto dto) {
+    public PermissionResponseDto update(@PathVariable Long id, @RequestBody PermissionRequestDto dto) {
         return permissionService.update(id, dto);
     }
 

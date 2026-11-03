@@ -1,14 +1,15 @@
 package com.estlc.fin_manager.mappers;
 
-import com.estlc.fin_manager.dto.AgencyDto;
+import com.estlc.fin_manager.dto.AgencyRequestDto;
+import com.estlc.fin_manager.dto.AgencyResponseDto;
 import com.estlc.fin_manager.entities.Agency;
 import org.springframework.stereotype.Component;
 
 @Component
 public class AgencyMapper {
 
-    public AgencyDto toDto(Agency agency) {
-        return new AgencyDto(
+    public AgencyResponseDto toResponseDto(Agency agency) {
+        return new AgencyResponseDto(
                 agency.getNumAg(),
                 agency.getLongitude(),
                 agency.getLatitude(),
@@ -18,14 +19,14 @@ public class AgencyMapper {
         );
     }
 
-    public Agency toEntity(AgencyDto dto) {
+    public Agency toEntity(AgencyRequestDto dto) {
         Agency agency = new Agency();
         agency.setNumAg(dto.numAg());
         apply(dto, agency);
         return agency;
     }
 
-    public void apply(AgencyDto dto, Agency agency) {
+    public void apply(AgencyRequestDto dto, Agency agency) {
         agency.setLongitude(dto.longitude());
         agency.setLatitude(dto.latitude());
         agency.setNomAg(dto.nomAg());

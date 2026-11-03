@@ -1,6 +1,7 @@
 package com.estlc.fin_manager.controllers;
 
-import com.estlc.fin_manager.dto.AgencyDto;
+import com.estlc.fin_manager.dto.AgencyRequestDto;
+import com.estlc.fin_manager.dto.AgencyResponseDto;
 import com.estlc.fin_manager.services.AgencyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,23 +17,23 @@ public class AgencyController {
     private final AgencyService agencyService;
 
     @GetMapping
-    public List<AgencyDto> findAll() {
+    public List<AgencyResponseDto> findAll() {
         return agencyService.findAll();
     }
 
     @GetMapping("/{id}")
-    public AgencyDto findById(@PathVariable Long id) {
+    public AgencyResponseDto findById(@PathVariable Long id) {
         return agencyService.findById(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public AgencyDto create(@RequestBody AgencyDto dto) {
+    public AgencyResponseDto create(@RequestBody AgencyRequestDto dto) {
         return agencyService.create(dto);
     }
 
     @PutMapping("/{id}")
-    public AgencyDto update(@PathVariable Long id, @RequestBody AgencyDto dto) {
+    public AgencyResponseDto update(@PathVariable Long id, @RequestBody AgencyRequestDto dto) {
         return agencyService.update(id, dto);
     }
 

@@ -1,6 +1,7 @@
 package com.estlc.fin_manager.services;
 
-import com.estlc.fin_manager.dto.LoanDto;
+import com.estlc.fin_manager.dto.LoanRequestDto;
+import com.estlc.fin_manager.dto.LoanResponseDto;
 import com.estlc.fin_manager.entities.Account;
 import com.estlc.fin_manager.entities.Loan;
 import com.estlc.fin_manager.mappers.LoanMapper;
@@ -22,36 +23,36 @@ public class LoanService {
     private final LoanMapper loanMapper;
 
     @Transactional(readOnly = true)
-    public List<LoanDto> findAll() {
+    public List<LoanResponseDto> findAll() {
         return loanRepository.findAll().stream()
-                .map(loanMapper::toDto)
+                .map(loanMapper::toResponseDto)
                 .toList();
     }
 
     @Transactional(readOnly = true)
-    public LoanDto findById(Long idCredit) {
-        return loanMapper.toDto(getLoan(idCredit));
+    public LoanResponseDto findById(Long idCredit) {
+        return loanMapper.toResponseDto(getLoan(idCredit));
     }
 
     @Transactional
-    public LoanDto create(LoanDto dto) {
+    public LoanResponseDto create(LoanRequestDto dto) {
         if (dto.accountId() == null) {
             throw new IllegalArgumentException("Le compte (accountId) est obligatoire");
         }
 
         Loan loan = loanMapper.toEntity(dto);
         loan.setAccount(getAccount(dto.accountId()));
-        return loanMapper.toDto(loanRepository.save(loan));
+        return loanMapper.toResponseDto(loanRepository.save(loan));
     }
 
     @Transactional
-    public LoanDto update(Long idCredit, LoanDto dto) {
+    public LoanResponseDto update(Long idCredit, LoanRequestDto dto) {
         Loan loan = getLoan(idCredit);
         loanMapper.apply(dto, loan);
         if (dto.accountId() != null) {
             loan.setAccount(getAccount(dto.accountId()));
         }
-        return loanMapper.toDto(loanRepository.save(loan));
+        return loanMapper.toResponseDto(loanRepository.save(loan));
     }
 
     @Transactional

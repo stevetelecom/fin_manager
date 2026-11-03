@@ -41,6 +41,8 @@ public class User {
     private SexEnum sexe; // enum partagé depuis le dossier utils
 
     private String profession;
+    @Basic(optional = false)
+    private String  password;
 
     // 1 User possède * Comptes
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)

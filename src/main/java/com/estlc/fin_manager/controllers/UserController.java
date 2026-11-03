@@ -1,6 +1,7 @@
 package com.estlc.fin_manager.controllers;
 
-import com.estlc.fin_manager.dto.UserDto;
+import com.estlc.fin_manager.dto.UserRequestDto;
+import com.estlc.fin_manager.dto.UserResponseDto;
 import com.estlc.fin_manager.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,23 +17,23 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    public List<UserDto> findAll() {
+    public List<UserResponseDto> findAll() {
         return userService.findAll();
     }
 
     @GetMapping("/{id}")
-    public UserDto findById(@PathVariable String id) {
+    public UserResponseDto findById(@PathVariable String id) {
         return userService.findById(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UserDto create(@RequestBody UserDto dto) {
+    public UserResponseDto create(@RequestBody UserRequestDto dto) {
         return userService.create(dto);
     }
 
     @PutMapping("/{id}")
-    public UserDto update(@PathVariable String id, @RequestBody UserDto dto) {
+    public UserResponseDto update(@PathVariable String id, @RequestBody UserRequestDto dto) {
         return userService.update(id, dto);
     }
 

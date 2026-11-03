@@ -4,9 +4,9 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 /**
- * DTO de Loan : accountId remplace l'objet Account.
+ * DTO de sortie pour Loan : accountId remplace l'objet Account.
  */
-public record LoanDto(
+public record LoanResponseDto(
         Long idCredit,
         BigDecimal montantCredit,
         LocalDate dateCredit,

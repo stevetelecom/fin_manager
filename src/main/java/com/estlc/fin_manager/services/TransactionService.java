@@ -1,6 +1,7 @@
 package com.estlc.fin_manager.services;
 
-import com.estlc.fin_manager.dto.TransactionDto;
+import com.estlc.fin_manager.dto.TransactionRequestDto;
+import com.estlc.fin_manager.dto.TransactionResponseDto;
 import com.estlc.fin_manager.entities.Account;
 import com.estlc.fin_manager.entities.Transaction;
 import com.estlc.fin_manager.mappers.TransactionMapper;
@@ -22,36 +23,36 @@ public class TransactionService {
     private final TransactionMapper transactionMapper;
 
     @Transactional(readOnly = true)
-    public List<TransactionDto> findAll() {
+    public List<TransactionResponseDto> findAll() {
         return transactionRepository.findAll().stream()
-                .map(transactionMapper::toDto)
+                .map(transactionMapper::toResponseDto)
                 .toList();
     }
 
     @Transactional(readOnly = true)
-    public TransactionDto findById(Long numTransac) {
-        return transactionMapper.toDto(getTransaction(numTransac));
+    public TransactionResponseDto findById(Long numTransac) {
+        return transactionMapper.toResponseDto(getTransaction(numTransac));
     }
 
     @Transactional
-    public TransactionDto create(TransactionDto dto) {
+    public TransactionResponseDto create(TransactionRequestDto dto) {
         if (dto.accountId() == null) {
             throw new IllegalArgumentException("Le compte (accountId) est obligatoire");
         }
 
         Transaction transaction = transactionMapper.toEntity(dto);
         transaction.setAccount(getAccount(dto.accountId()));
-        return transactionMapper.toDto(transactionRepository.save(transaction));
+        return transactionMapper.toResponseDto(transactionRepository.save(transaction));
     }
 
     @Transactional
-    public TransactionDto update(Long numTransac, TransactionDto dto) {
+    public TransactionResponseDto update(Long numTransac, TransactionRequestDto dto) {
         Transaction transaction = getTransaction(numTransac);
         transactionMapper.apply(dto, transaction);
         if (dto.accountId() != null) {
             transaction.setAccount(getAccount(dto.accountId()));
         }
-        return transactionMapper.toDto(transactionRepository.save(transaction));
+        return transactionMapper.toResponseDto(transactionRepository.save(transaction));
     }
 
     @Transactional

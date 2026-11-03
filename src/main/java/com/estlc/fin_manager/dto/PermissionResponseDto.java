@@ -1,9 +1,9 @@
 package com.estlc.fin_manager.dto;
 
 /**
- * DTO de Permission.
+ * DTO de sortie pour Permission.
  */
-public record PermissionDto(
+public record PermissionResponseDto(
         Long idPer,
         String nomPer,
         String descriptionPer

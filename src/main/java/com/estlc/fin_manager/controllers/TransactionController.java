@@ -1,6 +1,7 @@
 package com.estlc.fin_manager.controllers;
 
-import com.estlc.fin_manager.dto.TransactionDto;
+import com.estlc.fin_manager.dto.TransactionRequestDto;
+import com.estlc.fin_manager.dto.TransactionResponseDto;
 import com.estlc.fin_manager.services.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,23 +17,23 @@ public class TransactionController {
     private final TransactionService transactionService;
 
     @GetMapping
-    public List<TransactionDto> findAll() {
+    public List<TransactionResponseDto> findAll() {
         return transactionService.findAll();
     }
 
     @GetMapping("/{id}")
-    public TransactionDto findById(@PathVariable Long id) {
+    public TransactionResponseDto findById(@PathVariable Long id) {
         return transactionService.findById(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public TransactionDto create(@RequestBody TransactionDto dto) {
+    public TransactionResponseDto create(@RequestBody TransactionRequestDto dto) {
         return transactionService.create(dto);
     }
 
     @PutMapping("/{id}")
-    public TransactionDto update(@PathVariable Long id, @RequestBody TransactionDto dto) {
+    public TransactionResponseDto update(@PathVariable Long id, @RequestBody TransactionRequestDto dto) {
         return transactionService.update(id, dto);
     }
 

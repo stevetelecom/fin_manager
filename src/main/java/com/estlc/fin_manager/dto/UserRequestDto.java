@@ -8,7 +8,7 @@ import java.util.Set;
 /**
  * DTO de User : on expose les identifiants des rôles au lieu des objets Role complets.
  */
-public record UserDto(
+public record UserRequestDto(
         String idUser,
         String nomUser,
         String prenomUser,
@@ -17,6 +17,7 @@ public record UserDto(
         LocalDateTime dateN,
         SexEnum sexe,
         String profession,
+        String password,
         Set<Long> roleIds
 ) {
 }

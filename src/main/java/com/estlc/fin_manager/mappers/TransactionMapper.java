@@ -1,6 +1,7 @@
 package com.estlc.fin_manager.mappers;
 
-import com.estlc.fin_manager.dto.TransactionDto;
+import com.estlc.fin_manager.dto.TransactionRequestDto;
+import com.estlc.fin_manager.dto.TransactionResponseDto;
 import com.estlc.fin_manager.entities.Account;
 import com.estlc.fin_manager.entities.Transaction;
 import org.springframework.stereotype.Component;
@@ -8,10 +9,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class TransactionMapper {
 
-    public TransactionDto toDto(Transaction transaction) {
+    public TransactionResponseDto toResponseDto(Transaction transaction) {
         Account account = transaction.getAccount();
 
-        return new TransactionDto(
+        return new TransactionResponseDto(
                 transaction.getNumTransac(),
                 transaction.getTypeTransac(),
                 transaction.getDateTransac(),
@@ -21,14 +22,14 @@ public class TransactionMapper {
         );
     }
 
-    public Transaction toEntity(TransactionDto dto) {
+    public Transaction toEntity(TransactionRequestDto dto) {
         Transaction transaction = new Transaction();
         transaction.setNumTransac(dto.numTransac());
         apply(dto, transaction);
         return transaction;
     }
 
-    public void apply(TransactionDto dto, Transaction transaction) {
+    public void apply(TransactionRequestDto dto, Transaction transaction) {
         transaction.setTypeTransac(dto.typeTransac());
         transaction.setDateTransac(dto.dateTransac());
         transaction.setMontantTransac(dto.montantTransac());

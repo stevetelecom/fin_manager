@@ -1,6 +1,7 @@
 package com.estlc.fin_manager.services;
 
-import com.estlc.fin_manager.dto.NotificationDto;
+import com.estlc.fin_manager.dto.NotificationRequestDto;
+import com.estlc.fin_manager.dto.NotificationResponseDto;
 import com.estlc.fin_manager.entities.Notification;
 import com.estlc.fin_manager.entities.Transaction;
 import com.estlc.fin_manager.mappers.NotificationMapper;
@@ -22,36 +23,36 @@ public class NotificationService {
     private final NotificationMapper notificationMapper;
 
     @Transactional(readOnly = true)
-    public List<NotificationDto> findAll() {
+    public List<NotificationResponseDto> findAll() {
         return notificationRepository.findAll().stream()
-                .map(notificationMapper::toDto)
+                .map(notificationMapper::toResponseDto)
                 .toList();
     }
 
     @Transactional(readOnly = true)
-    public NotificationDto findById(Long idNotification) {
-        return notificationMapper.toDto(getNotification(idNotification));
+    public NotificationResponseDto findById(Long idNotification) {
+        return notificationMapper.toResponseDto(getNotification(idNotification));
     }
 
     @Transactional
-    public NotificationDto create(NotificationDto dto) {
+    public NotificationResponseDto create(NotificationRequestDto dto) {
         if (dto.transactionId() == null) {
             throw new IllegalArgumentException("La transaction (transactionId) est obligatoire");
         }
 
         Notification notification = notificationMapper.toEntity(dto);
         notification.setTransaction(getTransaction(dto.transactionId()));
-        return notificationMapper.toDto(notificationRepository.save(notification));
+        return notificationMapper.toResponseDto(notificationRepository.save(notification));
     }
 
     @Transactional
-    public NotificationDto update(Long idNotification, NotificationDto dto) {
+    public NotificationResponseDto update(Long idNotification, NotificationRequestDto dto) {
         Notification notification = getNotification(idNotification);
         notificationMapper.apply(dto, notification);
         if (dto.transactionId() != null) {
             notification.setTransaction(getTransaction(dto.transactionId()));
         }
-        return notificationMapper.toDto(notificationRepository.save(notification));
+        return notificationMapper.toResponseDto(notificationRepository.save(notification));
     }
 
     @Transactional

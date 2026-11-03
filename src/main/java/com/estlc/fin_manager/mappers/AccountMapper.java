@@ -1,6 +1,7 @@
 package com.estlc.fin_manager.mappers;
 
-import com.estlc.fin_manager.dto.AccountDto;
+import com.estlc.fin_manager.dto.AccountRequestDto;
+import com.estlc.fin_manager.dto.AccountResponseDto;
 import com.estlc.fin_manager.entities.Account;
 import com.estlc.fin_manager.entities.Agency;
 import com.estlc.fin_manager.entities.User;
@@ -9,11 +10,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class AccountMapper {
 
-    public AccountDto toDto(Account account) {
+    public AccountResponseDto toResponseDto(Account account) {
         User user = account.getUser();
         Agency agency = account.getAgency();
 
-        return new AccountDto(
+        return new AccountResponseDto(
                 account.getNumCompte(),
                 account.getSolde(),
                 account.getIntituleCompte(),
@@ -25,14 +26,14 @@ public class AccountMapper {
         );
     }
 
-    public Account toEntity(AccountDto dto) {
+    public Account toEntity(AccountRequestDto dto) {
         Account account = new Account();
         account.setNumCompte(dto.numCompte());
         apply(dto, account);
         return account;
     }
 
-    public void apply(AccountDto dto, Account account) {
+    public void apply(AccountRequestDto dto, Account account) {
         if (dto.solde() != null) {
             account.setSolde(dto.solde());
         }

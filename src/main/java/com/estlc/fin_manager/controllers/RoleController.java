@@ -1,6 +1,7 @@
 package com.estlc.fin_manager.controllers;
 
-import com.estlc.fin_manager.dto.RoleDto;
+import com.estlc.fin_manager.dto.RoleRequestDto;
+import com.estlc.fin_manager.dto.RoleResponseDto;
 import com.estlc.fin_manager.services.RoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,23 +17,23 @@ public class RoleController {
     private final RoleService roleService;
 
     @GetMapping
-    public List<RoleDto> findAll() {
+    public List<RoleResponseDto> findAll() {
         return roleService.findAll();
     }
 
     @GetMapping("/{id}")
-    public RoleDto findById(@PathVariable Long id) {
+    public RoleResponseDto findById(@PathVariable Long id) {
         return roleService.findById(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public RoleDto create(@RequestBody RoleDto dto) {
+    public RoleResponseDto create(@RequestBody RoleRequestDto dto) {
         return roleService.create(dto);
     }
 
     @PutMapping("/{id}")
-    public RoleDto update(@PathVariable Long id, @RequestBody RoleDto dto) {
+    public RoleResponseDto update(@PathVariable Long id, @RequestBody RoleRequestDto dto) {
         return roleService.update(id, dto);
     }
 
