@@ -1,7 +1,9 @@
 package com.estlc.fin_manager.mappers;
 
+import com.estlc.fin_manager.dto.AccountResponseDto;
 import com.estlc.fin_manager.dto.UserRequestDto;
 import com.estlc.fin_manager.dto.UserResponseDto;
+import com.estlc.fin_manager.entities.Account;
 import com.estlc.fin_manager.entities.Role;
 import com.estlc.fin_manager.entities.User;
 import org.mapstruct.BeanMapping;
@@ -39,6 +41,12 @@ public interface UserMapper {
     List<UserResponseDto> toDTOList(List<User> users);
 
     List<User> toEntityList(List<UserRequestDto> dtos);
+
+    @Mapping(source = "user.idUser", target = "userId")
+    @Mapping(source = "agency.numAg", target = "agencyId")
+    AccountResponseDto toAccountDTO(Account account);
+
+    List<AccountResponseDto> toAccountDTOList(List<Account> accounts);
 
     @Named("roleListToIdSet")
     default Set<Long> roleListToIdSet(List<Role> roles) {

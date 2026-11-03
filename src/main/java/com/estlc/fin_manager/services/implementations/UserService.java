@@ -3,12 +3,8 @@ package com.estlc.fin_manager.services.implementations;
 import com.estlc.fin_manager.dto.AccountResponseDto;
 import com.estlc.fin_manager.dto.UserRequestDto;
 import com.estlc.fin_manager.dto.UserResponseDto;
-import com.estlc.fin_manager.entities.Role;
 import com.estlc.fin_manager.entities.User;
-import com.estlc.fin_manager.mappers.AccountMapper;
 import com.estlc.fin_manager.mappers.UserMapper;
-import com.estlc.fin_manager.repositories.AccountRepository;
-import com.estlc.fin_manager.repositories.RoleRepository;
 import com.estlc.fin_manager.repositories.UserRepository;
 import com.estlc.fin_manager.services.interfaces.UserServiceInterface;
 import com.estlc.fin_manager.utils.Generateur;
@@ -16,20 +12,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 public class UserService implements UserServiceInterface {
 
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
-    private final AccountRepository accountRepository;
     private final UserMapper userMapper;
-    private final AccountMapper accountMapper;
     private final Generateur generateur;
 
     @Override
@@ -56,12 +47,11 @@ public class UserService implements UserServiceInterface {
 
         User user = userMapper.toDTOEntity(dto);
         if (user.getIdUser() == null || user.getIdUser().isBlank()) {
-            user.setIdUser(generateur.generateCni(10));
+            user.setIdUser(generateur.generateCni("USER", 10));
         } else if (userRepository.existsById(user.getIdUser())) {
             throw new IllegalArgumentException("Un utilisateur avec cette CNI existe déjà : " + user.getIdUser());
         }
 
-        user.setRoles(resolveRoles(dto.roleIds()));
         return userMapper.toDTO(userRepository.save(user));
     }
 
@@ -94,9 +84,6 @@ public class UserService implements UserServiceInterface {
         }
         User user = getUser(idUser);
         userMapper.updateEntityFromDto(dto, user);
-        if (dto.roleIds() != null) {
-            user.setRoles(resolveRoles(dto.roleIds()));
-        }
         return userMapper.toDTO(userRepository.save(user));
     }
 
@@ -112,9 +99,7 @@ public class UserService implements UserServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public List<AccountResponseDto> getAllAccounts(String idUser) {
-        return accountRepository.findByUser_IdUser(idUser).stream()
-                .map(accountMapper::toDTO)
-                .toList();
+        return userMapper.toAccountDTOList(getUser(idUser).getAccounts());
     }
 
     @Override
@@ -130,18 +115,5 @@ public class UserService implements UserServiceInterface {
     private User getUser(String idUser) {
         return userRepository.findById(idUser)
                 .orElseThrow(() -> new NoSuchElementException("Utilisateur introuvable : " + idUser));
-    }
-
-    private List<Role> resolveRoles(Set<Long> roleIds) {
-        List<Role> roles = new ArrayList<>();
-        if (roleIds == null) {
-            return roles;
-        }
-        for (Long roleId : roleIds) {
-            Role role = roleRepository.findById(roleId)
-                    .orElseThrow(() -> new NoSuchElementException("Rôle introuvable : " + roleId));
-            roles.add(role);
-        }
-        return roles;
     }
 }
