@@ -28,8 +28,7 @@ public class UserMapper {
                 user.getPrenomUser(),
                 user.getEmail(),
                 user.getPhone(),
-                user.getDateNaissance(),
-                user.getDateInscription(),
+                user.getDateN(),
                 user.getSexe(),
                 user.getProfession(),
                 roleIds
@@ -49,8 +48,7 @@ public class UserMapper {
         user.setPrenomUser(dto.prenomUser());
         user.setEmail(dto.email());
         user.setPhone(dto.phone());
-        user.setDateNaissance(dto.dateNaissance());
-        user.setDateInscription(dto.dateInscription());
+        user.setDateN(dto.dateN());
         user.setSexe(dto.sexe());
         user.setProfession(dto.profession());
     }

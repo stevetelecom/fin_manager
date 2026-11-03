@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,9 +35,7 @@ public class User {
 
     private String phone;
 
-    private LocalDate dateNaissance;
-
-    private LocalDate dateInscription; // date d'inscription de l'utilisateur
+    private LocalDateTime dateN; // unique champ date de l'utilisateur
 
     @Enumerated(EnumType.STRING)
     private SexEnum sexe; // enum partagé depuis le dossier utils

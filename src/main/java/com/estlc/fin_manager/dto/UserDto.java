@@ -2,7 +2,7 @@ package com.estlc.fin_manager.dto;
 
 import com.estlc.fin_manager.utils.SexEnum;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 /**
@@ -14,8 +14,7 @@ public record UserDto(
         String prenomUser,
         String email,
         String phone,
-        LocalDate dateNaissance,
-        LocalDate dateInscription,
+        LocalDateTime dateN,
         SexEnum sexe,
         String profession,
         Set<Long> roleIds
