@@ -19,6 +19,8 @@ import java.util.NoSuchElementException;
 @RequiredArgsConstructor
 public class UserService implements UserServiceInterface {
 
+    private static final int CNI_LENGTH = 5;
+
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final Generateur generateur;
@@ -47,7 +49,7 @@ public class UserService implements UserServiceInterface {
 
         User user = userMapper.toDTOEntity(dto);
         if (user.getIdUser() == null || user.getIdUser().isBlank()) {
-            user.setIdUser(generateur.generateCni("USER", 10));
+            user.setIdUser(generateur.generateCni("USER", CNI_LENGTH));
         } else if (userRepository.existsById(user.getIdUser())) {
             throw new IllegalArgumentException("Un utilisateur avec cette CNI existe déjà : " + user.getIdUser());
         }
