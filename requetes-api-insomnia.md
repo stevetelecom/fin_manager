@@ -3,6 +3,8 @@
 Base URL par défaut : `http://localhost:8080`
 Si tu lances l'application avec `SERVER_PORT=8081 ./run.sh`, remplace par `http://localhost:8081`.
 
+> **Toutes les routes sont sous `/api/v1`** : `/api/v1/users`, `/api/v1/accounts`, `/api/v1/agencies`, `/api/v1/roles`, `/api/v1/permissions`, `/api/v1/transactions`, `/api/v1/loans`, `/api/v1/notifications`.
+
 Toutes les requêtes avec un body doivent avoir l'en-tête :
 
 ```http
@@ -70,7 +72,7 @@ Après chaque création, recopie l'identifiant retourné dans la variable corres
 ### Créer une permission
 
 ```http
-POST {{ _.base_url }}/api/permissions
+POST {{ _.base_url }}/api/v1/permissions
 ```
 
 ```json
@@ -86,7 +88,7 @@ Réponse attendue : `201 Created`
 ### Lister les permissions
 
 ```http
-GET {{ _.base_url }}/api/permissions
+GET {{ _.base_url }}/api/v1/permissions
 ```
 
 Réponse attendue : `200 OK`
@@ -94,7 +96,7 @@ Réponse attendue : `200 OK`
 ### Lire une permission
 
 ```http
-GET {{ _.base_url }}/api/permissions/{{ _.permissionId }}
+GET {{ _.base_url }}/api/v1/permissions/{{ _.permissionId }}
 ```
 
 Réponse attendue : `200 OK`
@@ -102,7 +104,7 @@ Réponse attendue : `200 OK`
 ### Modifier une permission
 
 ```http
-PUT {{ _.base_url }}/api/permissions/{{ _.permissionId }}
+PUT {{ _.base_url }}/api/v1/permissions/{{ _.permissionId }}
 ```
 
 ```json
@@ -117,7 +119,7 @@ Réponse attendue : `200 OK`
 ### Supprimer une permission
 
 ```http
-DELETE {{ _.base_url }}/api/permissions/{{ _.permissionId }}
+DELETE {{ _.base_url }}/api/v1/permissions/{{ _.permissionId }}
 ```
 
 Réponse attendue : `204 No Content`
@@ -129,7 +131,7 @@ Réponse attendue : `204 No Content`
 ### Créer un rôle
 
 ```http
-POST {{ _.base_url }}/api/roles
+POST {{ _.base_url }}/api/v1/roles
 ```
 
 ```json
@@ -146,19 +148,19 @@ Réponse attendue : `201 Created`
 ### Lister les rôles
 
 ```http
-GET {{ _.base_url }}/api/roles
+GET {{ _.base_url }}/api/v1/roles
 ```
 
 ### Lire un rôle
 
 ```http
-GET {{ _.base_url }}/api/roles/{{ _.roleId }}
+GET {{ _.base_url }}/api/v1/roles/{{ _.roleId }}
 ```
 
 ### Modifier un rôle
 
 ```http
-PUT {{ _.base_url }}/api/roles/{{ _.roleId }}
+PUT {{ _.base_url }}/api/v1/roles/{{ _.roleId }}
 ```
 
 ```json
@@ -172,7 +174,7 @@ PUT {{ _.base_url }}/api/roles/{{ _.roleId }}
 ### Supprimer un rôle
 
 ```http
-DELETE {{ _.base_url }}/api/roles/{{ _.roleId }}
+DELETE {{ _.base_url }}/api/v1/roles/{{ _.roleId }}
 ```
 
 Réponse attendue : `204 No Content`
@@ -184,7 +186,7 @@ Réponse attendue : `204 No Content`
 ### Créer une agence
 
 ```http
-POST {{ _.base_url }}/api/agencies
+POST {{ _.base_url }}/api/v1/agencies
 ```
 
 ```json
@@ -203,19 +205,19 @@ Réponse attendue : `201 Created`
 ### Lister les agences
 
 ```http
-GET {{ _.base_url }}/api/agencies
+GET {{ _.base_url }}/api/v1/agencies
 ```
 
 ### Lire une agence
 
 ```http
-GET {{ _.base_url }}/api/agencies/{{ _.agencyId }}
+GET {{ _.base_url }}/api/v1/agencies/{{ _.agencyId }}
 ```
 
 ### Modifier une agence
 
 ```http
-PUT {{ _.base_url }}/api/agencies/{{ _.agencyId }}
+PUT {{ _.base_url }}/api/v1/agencies/{{ _.agencyId }}
 ```
 
 ```json
@@ -231,7 +233,7 @@ PUT {{ _.base_url }}/api/agencies/{{ _.agencyId }}
 ### Supprimer une agence
 
 ```http
-DELETE {{ _.base_url }}/api/agencies/{{ _.agencyId }}
+DELETE {{ _.base_url }}/api/v1/agencies/{{ _.agencyId }}
 ```
 
 Réponse attendue : `204 No Content`
@@ -240,8 +242,7 @@ Réponse attendue : `204 No Content`
 
 ## 6. Utilisateurs
 
-> Deux préfixes sont disponibles : `/api/users` et `/api/v1/users`.  
-> Les deux fonctionnent de la même manière.
+> Toutes les routes utilisent le préfixe `/api/v1`. L'ancienne route `/api/users` n'existe plus et renvoie `404`.
 
 ### Créer un utilisateur
 
@@ -266,18 +267,12 @@ Réponse attendue : `201 Created`
 → recopier `idUser` dans `userId`.  
 La CNI est générée automatiquement, par exemple `USER_A1B2C`.
 
-> `roleIds` est accepté dans le body (ex. `"roleIds": [1]`) mais **n'est pas traité** par le service utilisateur. Les rôles se gèrent via `/api/roles`.
+> `roleIds` est accepté dans le body (ex. `"roleIds": [1]`) mais **n'est pas traité** par le service utilisateur. Les rôles se gèrent via `/api/v1/roles`.
 
 ### Lister les utilisateurs
 
 ```http
 GET {{ _.base_url }}/api/v1/users
-```
-
-ou
-
-```http
-GET {{ _.base_url }}/api/users
 ```
 
 ### Lire un utilisateur
@@ -334,7 +329,7 @@ Réponse attendue : `404 Not Found`
 ### Créer un compte
 
 ```http
-POST {{ _.base_url }}/api/accounts
+POST {{ _.base_url }}/api/v1/accounts
 ```
 
 ```json
@@ -355,19 +350,19 @@ Réponse attendue : `201 Created`
 ### Lister les comptes
 
 ```http
-GET {{ _.base_url }}/api/accounts
+GET {{ _.base_url }}/api/v1/accounts
 ```
 
 ### Lire un compte
 
 ```http
-GET {{ _.base_url }}/api/accounts/{{ _.accountId }}
+GET {{ _.base_url }}/api/v1/accounts/{{ _.accountId }}
 ```
 
 ### Modifier un compte
 
 ```http
-PUT {{ _.base_url }}/api/accounts/{{ _.accountId }}
+PUT {{ _.base_url }}/api/v1/accounts/{{ _.accountId }}
 ```
 
 ```json
@@ -385,7 +380,7 @@ PUT {{ _.base_url }}/api/accounts/{{ _.accountId }}
 ### Supprimer un compte
 
 ```http
-DELETE {{ _.base_url }}/api/accounts/{{ _.accountId }}
+DELETE {{ _.base_url }}/api/v1/accounts/{{ _.accountId }}
 ```
 
 Réponse attendue : `204 No Content`
@@ -397,7 +392,7 @@ Réponse attendue : `204 No Content`
 ### Créer une transaction
 
 ```http
-POST {{ _.base_url }}/api/transactions
+POST {{ _.base_url }}/api/v1/transactions
 ```
 
 ```json
@@ -421,19 +416,19 @@ Valeurs possibles :
 ### Lister les transactions
 
 ```http
-GET {{ _.base_url }}/api/transactions
+GET {{ _.base_url }}/api/v1/transactions
 ```
 
 ### Lire une transaction
 
 ```http
-GET {{ _.base_url }}/api/transactions/{{ _.transactionId }}
+GET {{ _.base_url }}/api/v1/transactions/{{ _.transactionId }}
 ```
 
 ### Modifier une transaction
 
 ```http
-PUT {{ _.base_url }}/api/transactions/{{ _.transactionId }}
+PUT {{ _.base_url }}/api/v1/transactions/{{ _.transactionId }}
 ```
 
 ```json
@@ -449,7 +444,7 @@ PUT {{ _.base_url }}/api/transactions/{{ _.transactionId }}
 ### Supprimer une transaction
 
 ```http
-DELETE {{ _.base_url }}/api/transactions/{{ _.transactionId }}
+DELETE {{ _.base_url }}/api/v1/transactions/{{ _.transactionId }}
 ```
 
 Réponse attendue : `204 No Content`
@@ -461,7 +456,7 @@ Réponse attendue : `204 No Content`
 ### Créer un crédit
 
 ```http
-POST {{ _.base_url }}/api/loans
+POST {{ _.base_url }}/api/v1/loans
 ```
 
 ```json
@@ -480,19 +475,19 @@ Réponse attendue : `201 Created`
 ### Lister les crédits
 
 ```http
-GET {{ _.base_url }}/api/loans
+GET {{ _.base_url }}/api/v1/loans
 ```
 
 ### Lire un crédit
 
 ```http
-GET {{ _.base_url }}/api/loans/{{ _.loanId }}
+GET {{ _.base_url }}/api/v1/loans/{{ _.loanId }}
 ```
 
 ### Modifier un crédit
 
 ```http
-PUT {{ _.base_url }}/api/loans/{{ _.loanId }}
+PUT {{ _.base_url }}/api/v1/loans/{{ _.loanId }}
 ```
 
 ```json
@@ -508,7 +503,7 @@ PUT {{ _.base_url }}/api/loans/{{ _.loanId }}
 ### Supprimer un crédit
 
 ```http
-DELETE {{ _.base_url }}/api/loans/{{ _.loanId }}
+DELETE {{ _.base_url }}/api/v1/loans/{{ _.loanId }}
 ```
 
 Réponse attendue : `204 No Content`
@@ -520,7 +515,7 @@ Réponse attendue : `204 No Content`
 ### Créer une notification
 
 ```http
-POST {{ _.base_url }}/api/notifications
+POST {{ _.base_url }}/api/v1/notifications
 ```
 
 ```json
@@ -538,19 +533,19 @@ Réponse attendue : `201 Created`
 ### Lister les notifications
 
 ```http
-GET {{ _.base_url }}/api/notifications
+GET {{ _.base_url }}/api/v1/notifications
 ```
 
 ### Lire une notification
 
 ```http
-GET {{ _.base_url }}/api/notifications/{{ _.notificationId }}
+GET {{ _.base_url }}/api/v1/notifications/{{ _.notificationId }}
 ```
 
 ### Modifier une notification
 
 ```http
-PUT {{ _.base_url }}/api/notifications/{{ _.notificationId }}
+PUT {{ _.base_url }}/api/v1/notifications/{{ _.notificationId }}
 ```
 
 ```json
@@ -565,7 +560,7 @@ PUT {{ _.base_url }}/api/notifications/{{ _.notificationId }}
 ### Supprimer une notification
 
 ```http
-DELETE {{ _.base_url }}/api/notifications/{{ _.notificationId }}
+DELETE {{ _.base_url }}/api/v1/notifications/{{ _.notificationId }}
 ```
 
 Réponse attendue : `204 No Content`
@@ -577,14 +572,14 @@ Réponse attendue : `204 No Content`
 Supprime dans cet ordre pour éviter les erreurs de clés étrangères :
 
 ```http
-DELETE {{ _.base_url }}/api/notifications/{{ _.notificationId }}
-DELETE {{ _.base_url }}/api/loans/{{ _.loanId }}
-DELETE {{ _.base_url }}/api/transactions/{{ _.transactionId }}
-DELETE {{ _.base_url }}/api/accounts/{{ _.accountId }}
+DELETE {{ _.base_url }}/api/v1/notifications/{{ _.notificationId }}
+DELETE {{ _.base_url }}/api/v1/loans/{{ _.loanId }}
+DELETE {{ _.base_url }}/api/v1/transactions/{{ _.transactionId }}
+DELETE {{ _.base_url }}/api/v1/accounts/{{ _.accountId }}
 DELETE {{ _.base_url }}/api/v1/users/{{ _.userId }}
-DELETE {{ _.base_url }}/api/agencies/{{ _.agencyId }}
-DELETE {{ _.base_url }}/api/roles/{{ _.roleId }}
-DELETE {{ _.base_url }}/api/permissions/{{ _.permissionId }}
+DELETE {{ _.base_url }}/api/v1/agencies/{{ _.agencyId }}
+DELETE {{ _.base_url }}/api/v1/roles/{{ _.roleId }}
+DELETE {{ _.base_url }}/api/v1/permissions/{{ _.permissionId }}
 ```
 
 ---
@@ -593,22 +588,24 @@ DELETE {{ _.base_url }}/api/permissions/{{ _.permissionId }}
 
 | Ressource | Méthode | URL |
 |---|---|---|
-| Permissions | GET / POST | `/api/permissions` |
-| Permissions | GET / PUT / DELETE | `/api/permissions/{idPer}` |
-| Roles | GET / POST | `/api/roles` |
-| Roles | GET / PUT / DELETE | `/api/roles/{idRole}` |
-| Agences | GET / POST | `/api/agencies` |
-| Agences | GET / PUT / DELETE | `/api/agencies/{numAg}` |
-| Utilisateurs | GET / POST | `/api/users` ou `/api/v1/users` |
-| Utilisateurs | GET / PUT / DELETE | `/api/users/{idUser}` ou `/api/v1/users/{idUser}` |
-| Comptes | GET / POST | `/api/accounts` |
-| Comptes | GET / PUT / DELETE | `/api/accounts/{numCompte}` |
-| Transactions | GET / POST | `/api/transactions` |
-| Transactions | GET / PUT / DELETE | `/api/transactions/{numTransac}` |
-| Crédits | GET / POST | `/api/loans` |
-| Crédits | GET / PUT / DELETE | `/api/loans/{idCredit}` |
-| Notifications | GET / POST | `/api/notifications` |
-| Notifications | GET / PUT / DELETE | `/api/notifications/{idNotification}` |
+| Permissions | GET / POST | `/api/v1/permissions` |
+| Permissions | GET / PUT / DELETE | `/api/v1/permissions/{idPer}` |
+| Roles | GET / POST | `/api/v1/roles` |
+| Roles | GET / PUT / DELETE | `/api/v1/roles/{idRole}` |
+| Agences | GET / POST | `/api/v1/agencies` |
+| Agences | GET / PUT / DELETE | `/api/v1/agencies/{numAg}` |
+| Utilisateurs | GET / POST | `/api/v1/users` |
+| Utilisateurs | GET / PUT / DELETE | `/api/v1/users/{idUser}` |
+| Comptes | GET / POST | `/api/v1/accounts` |
+| Comptes | GET / PUT / DELETE | `/api/v1/accounts/{numCompte}` |
+| Transactions | GET / POST | `/api/v1/transactions` |
+| Transactions | GET / PUT / DELETE | `/api/v1/transactions/{numTransac}` |
+| Crédits | GET / POST | `/api/v1/loans` |
+| Crédits | GET / PUT / DELETE | `/api/v1/loans/{idCredit}` |
+| Notifications | GET / POST | `/api/v1/notifications` |
+| Notifications | GET / PUT / DELETE | `/api/v1/notifications/{idNotification}` |
+
+> Les anciennes routes sans version (`/api/users`, `/api/accounts`, etc.) sont supprimées et renvoient `404 Not Found`.
 
 Statuts attendus :
 
@@ -642,7 +639,7 @@ Les champs suivants sont **obligatoires** dans les bodies JSON. Un champ manquan
 Requête :
 
 ```http
-POST {{ _.base_url }}/api/users
+POST {{ _.base_url }}/api/v1/users
 ```
 
 ```json
@@ -726,7 +723,7 @@ Ces exemples correspondent exactement à ce que l'API renvoie (identifiants et C
 }
 ```
 
-> `idUser` correspond à la CNI (`USER_XXXXX`) : c'est cet identifiant qui sert dans `/api/users/{idUser}`.
+> `idUser` correspond à la CNI (`USER_XXXXX`) : c'est cet identifiant qui sert dans `/api/v1/users/{idUser}`.
 
 ### Compte créé — `201 Created`
 
@@ -796,5 +793,6 @@ Ces exemples correspondent exactement à ce que l'API renvoie (identifiants et C
 9. Tester `GET` liste + `GET` par id sur chaque ressource
 10. Tester `PUT` sur chaque ressource
 11. Tester un `GET` sur un id inexistant → doit renvoyer `404`
-12. Tester un body invalide (ex. email `pas-un-email`) → doit renvoyer `400`
-13. Supprimer dans l'ordre : notification → crédit → transaction → compte → utilisateur → agence → rôle → permission
+12. Tester une ancienne route (`/api/users`, `/api/accounts`, etc.) → doit renvoyer `404`
+13. Tester un body invalide (ex. email `pas-un-email`) → doit renvoyer `400`
+14. Supprimer dans l'ordre : notification → crédit → transaction → compte → utilisateur → agence → rôle → permission
