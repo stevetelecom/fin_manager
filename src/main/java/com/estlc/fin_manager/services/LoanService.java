@@ -25,13 +25,13 @@ public class LoanService {
     @Transactional(readOnly = true)
     public List<LoanResponseDto> findAll() {
         return loanRepository.findAll().stream()
-                .map(loanMapper::toResponseDto)
+                .map(loanMapper::toDTO)
                 .toList();
     }
 
     @Transactional(readOnly = true)
     public LoanResponseDto findById(Long idCredit) {
-        return loanMapper.toResponseDto(getLoan(idCredit));
+        return loanMapper.toDTO(getLoan(idCredit));
     }
 
     @Transactional
@@ -40,19 +40,19 @@ public class LoanService {
             throw new IllegalArgumentException("Le compte (accountId) est obligatoire");
         }
 
-        Loan loan = loanMapper.toEntity(dto);
+        Loan loan = loanMapper.toDTOEntity(dto);
         loan.setAccount(getAccount(dto.accountId()));
-        return loanMapper.toResponseDto(loanRepository.save(loan));
+        return loanMapper.toDTO(loanRepository.save(loan));
     }
 
     @Transactional
     public LoanResponseDto update(Long idCredit, LoanRequestDto dto) {
         Loan loan = getLoan(idCredit);
-        loanMapper.apply(dto, loan);
+        loanMapper.updateEntityFromDto(dto, loan);
         if (dto.accountId() != null) {
             loan.setAccount(getAccount(dto.accountId()));
         }
-        return loanMapper.toResponseDto(loanRepository.save(loan));
+        return loanMapper.toDTO(loanRepository.save(loan));
     }
 
     @Transactional

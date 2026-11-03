@@ -26,14 +26,12 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public List<UserResponseDto> findAll() {
-        return userRepository.findAll().stream()
-                .map(userMapper::toResponseDto)
-                .toList();
+        return userMapper.toDTOList(userRepository.findAll());
     }
 
     @Transactional(readOnly = true)
     public UserResponseDto findById(String idUser) {
-        return userMapper.toResponseDto(getUser(idUser));
+        return userMapper.toDTO(getUser(idUser));
     }
 
     @Transactional
@@ -48,19 +46,19 @@ public class UserService {
             throw new IllegalArgumentException("Le mot de passe (password) est obligatoire");
         }
 
-        User user = userMapper.toEntity(dto);
+        User user = userMapper.toDTOEntity(dto);
         user.setRoles(resolveRoles(dto.roleIds()));
-        return userMapper.toResponseDto(userRepository.save(user));
+        return userMapper.toDTO(userRepository.save(user));
     }
 
     @Transactional
     public UserResponseDto update(String idUser, UserRequestDto dto) {
         User user = getUser(idUser);
-        userMapper.apply(dto, user);
+        userMapper.updateEntityFromDto(dto, user);
         if (dto.roleIds() != null) {
             user.setRoles(resolveRoles(dto.roleIds()));
         }
-        return userMapper.toResponseDto(userRepository.save(user));
+        return userMapper.toDTO(userRepository.save(user));
     }
 
     @Transactional

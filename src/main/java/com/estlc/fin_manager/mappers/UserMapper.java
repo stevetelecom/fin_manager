@@ -4,57 +4,49 @@ import com.estlc.fin_manager.dto.UserRequestDto;
 import com.estlc.fin_manager.dto.UserResponseDto;
 import com.estlc.fin_manager.entities.Role;
 import com.estlc.fin_manager.entities.User;
-import org.springframework.stereotype.Component;
+import org.mapstruct.BeanMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingConstants;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.Named;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * Convertit un User en UserResponseDto et un UserRequestDto en User.
- * Les relations (rôles) sont résolues par le service, pas par le mapper.
+ * Mapper MapStruct de User.
+ * Les relations (roles, accounts) sont resolues par le service.
  */
-@Component
-public class UserMapper {
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
+public interface UserMapper {
 
-    public UserResponseDto toResponseDto(User user) {
-        Set<Long> roleIds = user.getRoles() == null
-                ? Set.of()
-                : user.getRoles().stream()
-                        .map(Role::getIdRole)
-                        .collect(Collectors.toSet());
+    @Mapping(source = "roles", target = "roleIds", qualifiedByName = "roleListToIdSet")
+    UserResponseDto toDTO(User user);
 
-        return new UserResponseDto(
-                user.getIdUser(),
-                user.getNomUser(),
-                user.getPrenomUser(),
-                user.getEmail(),
-                user.getPhone(),
-                user.getDateN(),
-                user.getSexe(),
-                user.getProfession(),
-                user.getPassword(),
-                roleIds
-        );
-    }
+    @Mapping(target = "roles", ignore = true)
+    @Mapping(target = "accounts", ignore = true)
+    User toDTOEntity(UserRequestDto dto);
 
-    public User toEntity(UserRequestDto dto) {
-        User user = new User();
-        user.setIdUser(dto.idUser());
-        apply(dto, user);
-        return user;
-    }
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "idUser", ignore = true)
+    @Mapping(target = "roles", ignore = true)
+    @Mapping(target = "accounts", ignore = true)
+    void updateEntityFromDto(UserRequestDto dto, @MappingTarget User user);
 
-    /** Copie les champs simples (sans la clé primaire ni les relations). */
-    public void apply(UserRequestDto dto, User user) {
-        user.setNomUser(dto.nomUser());
-        user.setPrenomUser(dto.prenomUser());
-        user.setEmail(dto.email());
-        user.setPhone(dto.phone());
-        user.setDateN(dto.dateN());
-        user.setSexe(dto.sexe());
-        user.setProfession(dto.profession());
-        if (dto.password() != null) {
-            user.setPassword(dto.password());
+    List<UserResponseDto> toDTOList(List<User> users);
+
+    List<User> toEntityList(List<UserRequestDto> dtos);
+
+    @Named("roleListToIdSet")
+    default Set<Long> roleListToIdSet(List<Role> roles) {
+        if (roles == null) {
+            return Set.of();
         }
+        return roles.stream()
+                .map(Role::getIdRole)
+                .collect(Collectors.toSet());
     }
 }

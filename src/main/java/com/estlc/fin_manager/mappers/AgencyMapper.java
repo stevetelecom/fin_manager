@@ -3,34 +3,26 @@ package com.estlc.fin_manager.mappers;
 import com.estlc.fin_manager.dto.AgencyRequestDto;
 import com.estlc.fin_manager.dto.AgencyResponseDto;
 import com.estlc.fin_manager.entities.Agency;
-import org.springframework.stereotype.Component;
+import org.mapstruct.BeanMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingConstants;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 
-@Component
-public class AgencyMapper {
+/**
+ * Mapper MapStruct de Agency.
+ */
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
+public interface AgencyMapper {
 
-    public AgencyResponseDto toResponseDto(Agency agency) {
-        return new AgencyResponseDto(
-                agency.getNumAg(),
-                agency.getLongitude(),
-                agency.getLatitude(),
-                agency.getNomAg(),
-                agency.getTelAg(),
-                agency.getEmailAg()
-        );
-    }
+    AgencyResponseDto toDTO(Agency agency);
 
-    public Agency toEntity(AgencyRequestDto dto) {
-        Agency agency = new Agency();
-        agency.setNumAg(dto.numAg());
-        apply(dto, agency);
-        return agency;
-    }
+    @Mapping(target = "accounts", ignore = true)
+    Agency toDTOEntity(AgencyRequestDto dto);
 
-    public void apply(AgencyRequestDto dto, Agency agency) {
-        agency.setLongitude(dto.longitude());
-        agency.setLatitude(dto.latitude());
-        agency.setNomAg(dto.nomAg());
-        agency.setTelAg(dto.telAg());
-        agency.setEmailAg(dto.emailAg());
-    }
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "numAg", ignore = true)
+    @Mapping(target = "accounts", ignore = true)
+    void updateEntityFromDto(AgencyRequestDto dto, @MappingTarget Agency agency);
 }

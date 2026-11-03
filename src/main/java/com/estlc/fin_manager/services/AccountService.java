@@ -28,13 +28,13 @@ public class AccountService {
     @Transactional(readOnly = true)
     public List<AccountResponseDto> findAll() {
         return accountRepository.findAll().stream()
-                .map(accountMapper::toResponseDto)
+                .map(accountMapper::toDTO)
                 .toList();
     }
 
     @Transactional(readOnly = true)
     public AccountResponseDto findById(Long numCompte) {
-        return accountMapper.toResponseDto(getAccount(numCompte));
+        return accountMapper.toDTO(getAccount(numCompte));
     }
 
     @Transactional
@@ -43,23 +43,23 @@ public class AccountService {
             throw new IllegalArgumentException("Le userId (CNI du propriétaire) est obligatoire");
         }
 
-        Account account = accountMapper.toEntity(dto);
+        Account account = accountMapper.toDTOEntity(dto);
         account.setUser(getUser(dto.userId()));
         account.setAgency(resolveAgency(dto.agencyId()));
-        return accountMapper.toResponseDto(accountRepository.save(account));
+        return accountMapper.toDTO(accountRepository.save(account));
     }
 
     @Transactional
     public AccountResponseDto update(Long numCompte, AccountRequestDto dto) {
         Account account = getAccount(numCompte);
-        accountMapper.apply(dto, account);
+        accountMapper.updateEntityFromDto(dto, account);
         if (dto.userId() != null) {
             account.setUser(getUser(dto.userId()));
         }
         if (dto.agencyId() != null) {
             account.setAgency(resolveAgency(dto.agencyId()));
         }
-        return accountMapper.toResponseDto(accountRepository.save(account));
+        return accountMapper.toDTO(accountRepository.save(account));
     }
 
     @Transactional

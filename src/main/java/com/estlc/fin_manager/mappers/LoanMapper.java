@@ -2,37 +2,29 @@ package com.estlc.fin_manager.mappers;
 
 import com.estlc.fin_manager.dto.LoanRequestDto;
 import com.estlc.fin_manager.dto.LoanResponseDto;
-import com.estlc.fin_manager.entities.Account;
 import com.estlc.fin_manager.entities.Loan;
-import org.springframework.stereotype.Component;
+import org.mapstruct.BeanMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingConstants;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 
-@Component
-public class LoanMapper {
+/**
+ * Mapper MapStruct de Loan.
+ * La relation account est resolue par le service.
+ */
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
+public interface LoanMapper {
 
-    public LoanResponseDto toResponseDto(Loan loan) {
-        Account account = loan.getAccount();
+    @Mapping(source = "account.numCompte", target = "accountId")
+    LoanResponseDto toDTO(Loan loan);
 
-        return new LoanResponseDto(
-                loan.getIdCredit(),
-                loan.getMontantCredit(),
-                loan.getDateCredit(),
-                loan.getTypeCredit(),
-                loan.getMotifCredit(),
-                account != null ? account.getNumCompte() : null
-        );
-    }
+    @Mapping(target = "account", ignore = true)
+    Loan toDTOEntity(LoanRequestDto dto);
 
-    public Loan toEntity(LoanRequestDto dto) {
-        Loan loan = new Loan();
-        loan.setIdCredit(dto.idCredit());
-        apply(dto, loan);
-        return loan;
-    }
-
-    public void apply(LoanRequestDto dto, Loan loan) {
-        loan.setMontantCredit(dto.montantCredit());
-        loan.setDateCredit(dto.dateCredit());
-        loan.setTypeCredit(dto.typeCredit());
-        loan.setMotifCredit(dto.motifCredit());
-    }
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "idCredit", ignore = true)
+    @Mapping(target = "account", ignore = true)
+    void updateEntityFromDto(LoanRequestDto dto, @MappingTarget Loan loan);
 }

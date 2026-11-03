@@ -3,28 +3,26 @@ package com.estlc.fin_manager.mappers;
 import com.estlc.fin_manager.dto.PermissionRequestDto;
 import com.estlc.fin_manager.dto.PermissionResponseDto;
 import com.estlc.fin_manager.entities.Permission;
-import org.springframework.stereotype.Component;
+import org.mapstruct.BeanMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingConstants;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 
-@Component
-public class PermissionMapper {
+/**
+ * Mapper MapStruct de Permission.
+ */
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
+public interface PermissionMapper {
 
-    public PermissionResponseDto toResponseDto(Permission permission) {
-        return new PermissionResponseDto(
-                permission.getIdPer(),
-                permission.getNomPer(),
-                permission.getDescriptionPer()
-        );
-    }
+    PermissionResponseDto toDTO(Permission permission);
 
-    public Permission toEntity(PermissionRequestDto dto) {
-        Permission permission = new Permission();
-        permission.setIdPer(dto.idPer());
-        apply(dto, permission);
-        return permission;
-    }
+    @Mapping(target = "roles", ignore = true)
+    Permission toDTOEntity(PermissionRequestDto dto);
 
-    public void apply(PermissionRequestDto dto, Permission permission) {
-        permission.setNomPer(dto.nomPer());
-        permission.setDescriptionPer(dto.descriptionPer());
-    }
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "idPer", ignore = true)
+    @Mapping(target = "roles", ignore = true)
+    void updateEntityFromDto(PermissionRequestDto dto, @MappingTarget Permission permission);
 }

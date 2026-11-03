@@ -22,26 +22,26 @@ public class PermissionService {
     @Transactional(readOnly = true)
     public List<PermissionResponseDto> findAll() {
         return permissionRepository.findAll().stream()
-                .map(permissionMapper::toResponseDto)
+                .map(permissionMapper::toDTO)
                 .toList();
     }
 
     @Transactional(readOnly = true)
     public PermissionResponseDto findById(Long idPer) {
-        return permissionMapper.toResponseDto(getPermission(idPer));
+        return permissionMapper.toDTO(getPermission(idPer));
     }
 
     @Transactional
     public PermissionResponseDto create(PermissionRequestDto dto) {
-        Permission permission = permissionMapper.toEntity(dto);
-        return permissionMapper.toResponseDto(permissionRepository.save(permission));
+        Permission permission = permissionMapper.toDTOEntity(dto);
+        return permissionMapper.toDTO(permissionRepository.save(permission));
     }
 
     @Transactional
     public PermissionResponseDto update(Long idPer, PermissionRequestDto dto) {
         Permission permission = getPermission(idPer);
-        permissionMapper.apply(dto, permission);
-        return permissionMapper.toResponseDto(permissionRepository.save(permission));
+        permissionMapper.updateEntityFromDto(dto, permission);
+        return permissionMapper.toDTO(permissionRepository.save(permission));
     }
 
     @Transactional

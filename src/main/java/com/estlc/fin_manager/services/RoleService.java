@@ -27,30 +27,30 @@ public class RoleService {
     @Transactional(readOnly = true)
     public List<RoleResponseDto> findAll() {
         return roleRepository.findAll().stream()
-                .map(roleMapper::toResponseDto)
+                .map(roleMapper::toDTO)
                 .toList();
     }
 
     @Transactional(readOnly = true)
     public RoleResponseDto findById(Long idRole) {
-        return roleMapper.toResponseDto(getRole(idRole));
+        return roleMapper.toDTO(getRole(idRole));
     }
 
     @Transactional
     public RoleResponseDto create(RoleRequestDto dto) {
-        Role role = roleMapper.toEntity(dto);
+        Role role = roleMapper.toDTOEntity(dto);
         role.setPermissions(resolvePermissions(dto.permissionIds()));
-        return roleMapper.toResponseDto(roleRepository.save(role));
+        return roleMapper.toDTO(roleRepository.save(role));
     }
 
     @Transactional
     public RoleResponseDto update(Long idRole, RoleRequestDto dto) {
         Role role = getRole(idRole);
-        roleMapper.apply(dto, role);
+        roleMapper.updateEntityFromDto(dto, role);
         if (dto.permissionIds() != null) {
             role.setPermissions(resolvePermissions(dto.permissionIds()));
         }
-        return roleMapper.toResponseDto(roleRepository.save(role));
+        return roleMapper.toDTO(roleRepository.save(role));
     }
 
     @Transactional

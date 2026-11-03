@@ -2,37 +2,31 @@ package com.estlc.fin_manager.mappers;
 
 import com.estlc.fin_manager.dto.TransactionRequestDto;
 import com.estlc.fin_manager.dto.TransactionResponseDto;
-import com.estlc.fin_manager.entities.Account;
 import com.estlc.fin_manager.entities.Transaction;
-import org.springframework.stereotype.Component;
+import org.mapstruct.BeanMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingConstants;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 
-@Component
-public class TransactionMapper {
+/**
+ * Mapper MapStruct de Transaction.
+ * La relation account est resolue par le service.
+ */
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
+public interface TransactionMapper {
 
-    public TransactionResponseDto toResponseDto(Transaction transaction) {
-        Account account = transaction.getAccount();
+    @Mapping(source = "account.numCompte", target = "accountId")
+    TransactionResponseDto toDTO(Transaction transaction);
 
-        return new TransactionResponseDto(
-                transaction.getNumTransac(),
-                transaction.getTypeTransac(),
-                transaction.getDateTransac(),
-                transaction.getMontantTransac(),
-                transaction.getStatutTransac(),
-                account != null ? account.getNumCompte() : null
-        );
-    }
+    @Mapping(target = "account", ignore = true)
+    @Mapping(target = "notification", ignore = true)
+    Transaction toDTOEntity(TransactionRequestDto dto);
 
-    public Transaction toEntity(TransactionRequestDto dto) {
-        Transaction transaction = new Transaction();
-        transaction.setNumTransac(dto.numTransac());
-        apply(dto, transaction);
-        return transaction;
-    }
-
-    public void apply(TransactionRequestDto dto, Transaction transaction) {
-        transaction.setTypeTransac(dto.typeTransac());
-        transaction.setDateTransac(dto.dateTransac());
-        transaction.setMontantTransac(dto.montantTransac());
-        transaction.setStatutTransac(dto.statutTransac());
-    }
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "numTransac", ignore = true)
+    @Mapping(target = "account", ignore = true)
+    @Mapping(target = "notification", ignore = true)
+    void updateEntityFromDto(TransactionRequestDto dto, @MappingTarget Transaction transaction);
 }

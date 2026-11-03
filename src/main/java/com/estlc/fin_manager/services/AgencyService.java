@@ -22,26 +22,26 @@ public class AgencyService {
     @Transactional(readOnly = true)
     public List<AgencyResponseDto> findAll() {
         return agencyRepository.findAll().stream()
-                .map(agencyMapper::toResponseDto)
+                .map(agencyMapper::toDTO)
                 .toList();
     }
 
     @Transactional(readOnly = true)
     public AgencyResponseDto findById(Long numAg) {
-        return agencyMapper.toResponseDto(getAgency(numAg));
+        return agencyMapper.toDTO(getAgency(numAg));
     }
 
     @Transactional
     public AgencyResponseDto create(AgencyRequestDto dto) {
-        Agency agency = agencyMapper.toEntity(dto);
-        return agencyMapper.toResponseDto(agencyRepository.save(agency));
+        Agency agency = agencyMapper.toDTOEntity(dto);
+        return agencyMapper.toDTO(agencyRepository.save(agency));
     }
 
     @Transactional
     public AgencyResponseDto update(Long numAg, AgencyRequestDto dto) {
         Agency agency = getAgency(numAg);
-        agencyMapper.apply(dto, agency);
-        return agencyMapper.toResponseDto(agencyRepository.save(agency));
+        agencyMapper.updateEntityFromDto(dto, agency);
+        return agencyMapper.toDTO(agencyRepository.save(agency));
     }
 
     @Transactional

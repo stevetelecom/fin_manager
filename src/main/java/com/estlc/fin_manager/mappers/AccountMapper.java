@@ -3,43 +3,36 @@ package com.estlc.fin_manager.mappers;
 import com.estlc.fin_manager.dto.AccountRequestDto;
 import com.estlc.fin_manager.dto.AccountResponseDto;
 import com.estlc.fin_manager.entities.Account;
-import com.estlc.fin_manager.entities.Agency;
-import com.estlc.fin_manager.entities.User;
-import org.springframework.stereotype.Component;
+import org.mapstruct.BeanMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingConstants;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 
-@Component
-public class AccountMapper {
+/**
+ * Mapper MapStruct de Account.
+ * Les relations (user, agency) sont resolues par le service.
+ */
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
+public interface AccountMapper {
 
-    public AccountResponseDto toResponseDto(Account account) {
-        User user = account.getUser();
-        Agency agency = account.getAgency();
+    @Mapping(source = "user.idUser", target = "userId")
+    @Mapping(source = "agency.numAg", target = "agencyId")
+    AccountResponseDto toDTO(Account account);
 
-        return new AccountResponseDto(
-                account.getNumCompte(),
-                account.getSolde(),
-                account.getIntituleCompte(),
-                account.getTypeCompte(),
-                account.getDateOuverture(),
-                account.getStatutCompte(),
-                user != null ? user.getIdUser() : null,
-                agency != null ? agency.getNumAg() : null
-        );
-    }
+    @Mapping(target = "solde", defaultExpression = "java(java.math.BigDecimal.ZERO)")
+    @Mapping(target = "user", ignore = true)
+    @Mapping(target = "agency", ignore = true)
+    @Mapping(target = "transactions", ignore = true)
+    @Mapping(target = "loans", ignore = true)
+    Account toDTOEntity(AccountRequestDto dto);
 
-    public Account toEntity(AccountRequestDto dto) {
-        Account account = new Account();
-        account.setNumCompte(dto.numCompte());
-        apply(dto, account);
-        return account;
-    }
-
-    public void apply(AccountRequestDto dto, Account account) {
-        if (dto.solde() != null) {
-            account.setSolde(dto.solde());
-        }
-        account.setIntituleCompte(dto.intituleCompte());
-        account.setTypeCompte(dto.typeCompte());
-        account.setDateOuverture(dto.dateOuverture());
-        account.setStatutCompte(dto.statutCompte());
-    }
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "numCompte", ignore = true)
+    @Mapping(target = "user", ignore = true)
+    @Mapping(target = "agency", ignore = true)
+    @Mapping(target = "transactions", ignore = true)
+    @Mapping(target = "loans", ignore = true)
+    void updateEntityFromDto(AccountRequestDto dto, @MappingTarget Account account);
 }

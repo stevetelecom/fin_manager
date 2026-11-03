@@ -25,13 +25,13 @@ public class TransactionService {
     @Transactional(readOnly = true)
     public List<TransactionResponseDto> findAll() {
         return transactionRepository.findAll().stream()
-                .map(transactionMapper::toResponseDto)
+                .map(transactionMapper::toDTO)
                 .toList();
     }
 
     @Transactional(readOnly = true)
     public TransactionResponseDto findById(Long numTransac) {
-        return transactionMapper.toResponseDto(getTransaction(numTransac));
+        return transactionMapper.toDTO(getTransaction(numTransac));
     }
 
     @Transactional
@@ -40,19 +40,19 @@ public class TransactionService {
             throw new IllegalArgumentException("Le compte (accountId) est obligatoire");
         }
 
-        Transaction transaction = transactionMapper.toEntity(dto);
+        Transaction transaction = transactionMapper.toDTOEntity(dto);
         transaction.setAccount(getAccount(dto.accountId()));
-        return transactionMapper.toResponseDto(transactionRepository.save(transaction));
+        return transactionMapper.toDTO(transactionRepository.save(transaction));
     }
 
     @Transactional
     public TransactionResponseDto update(Long numTransac, TransactionRequestDto dto) {
         Transaction transaction = getTransaction(numTransac);
-        transactionMapper.apply(dto, transaction);
+        transactionMapper.updateEntityFromDto(dto, transaction);
         if (dto.accountId() != null) {
             transaction.setAccount(getAccount(dto.accountId()));
         }
-        return transactionMapper.toResponseDto(transactionRepository.save(transaction));
+        return transactionMapper.toDTO(transactionRepository.save(transaction));
     }
 
     @Transactional

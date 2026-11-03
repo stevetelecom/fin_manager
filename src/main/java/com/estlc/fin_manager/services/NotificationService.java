@@ -25,13 +25,13 @@ public class NotificationService {
     @Transactional(readOnly = true)
     public List<NotificationResponseDto> findAll() {
         return notificationRepository.findAll().stream()
-                .map(notificationMapper::toResponseDto)
+                .map(notificationMapper::toDTO)
                 .toList();
     }
 
     @Transactional(readOnly = true)
     public NotificationResponseDto findById(Long idNotification) {
-        return notificationMapper.toResponseDto(getNotification(idNotification));
+        return notificationMapper.toDTO(getNotification(idNotification));
     }
 
     @Transactional
@@ -40,19 +40,19 @@ public class NotificationService {
             throw new IllegalArgumentException("La transaction (transactionId) est obligatoire");
         }
 
-        Notification notification = notificationMapper.toEntity(dto);
+        Notification notification = notificationMapper.toDTOEntity(dto);
         notification.setTransaction(getTransaction(dto.transactionId()));
-        return notificationMapper.toResponseDto(notificationRepository.save(notification));
+        return notificationMapper.toDTO(notificationRepository.save(notification));
     }
 
     @Transactional
     public NotificationResponseDto update(Long idNotification, NotificationRequestDto dto) {
         Notification notification = getNotification(idNotification);
-        notificationMapper.apply(dto, notification);
+        notificationMapper.updateEntityFromDto(dto, notification);
         if (dto.transactionId() != null) {
             notification.setTransaction(getTransaction(dto.transactionId()));
         }
-        return notificationMapper.toResponseDto(notificationRepository.save(notification));
+        return notificationMapper.toDTO(notificationRepository.save(notification));
     }
 
     @Transactional
