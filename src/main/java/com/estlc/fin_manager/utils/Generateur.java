@@ -11,7 +11,8 @@ public class Generateur {
     private final UserRepository usersRepository;
 
     public String generateCni(String roleLabel, int length) {
-        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+";
+        // Charset alphanumerique : evite #, %, @, etc. dans les URLs (/api/users/{cni}).
+        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         StringBuilder randomString = new StringBuilder();
         for (int i = 0; i < length; i++) {
             int index = (int) (Math.random() * chars.length());
