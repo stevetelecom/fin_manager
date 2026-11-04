@@ -22,7 +22,7 @@ import java.util.List;
 @Table(name = "users")
 @Getter
 @Setter
-@NoArgsConstructor // constructeur sans arguments (Lombok) ; ajouter @RequiredArgsConstructor si besoin
+@NoArgsConstructor
 public class User {
 
     @Id
